@@ -3,7 +3,7 @@ import './home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+///hello
 class EmailFieldValidator {
   static String validate(String value) {
     return value.isEmpty ? 'Password can\'t be empty' : null;
