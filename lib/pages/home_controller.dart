@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeController {
 
-  void updateAccount(String id) {
+  static void updateAccount(String id) {
     if(id != null){
     DocumentReference documentReference = Firestore.instance
         .collection('users')

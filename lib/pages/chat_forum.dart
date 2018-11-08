@@ -55,7 +55,7 @@ class ChatForumScreen extends State<ChatForum> with TickerProviderStateMixin {
       body: new Column(children: <Widget>[
         new Flexible(
             child: new StreamBuilder(
-                stream: cc.getGroupChatMessages(forumName),
+                stream: ChatController.getGroupChatMessages(forumName),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return const Text('Loading...');
                   return new ListView.builder(
@@ -123,14 +123,14 @@ class ChatForumScreen extends State<ChatForum> with TickerProviderStateMixin {
 
   ///Send message onto forum
   void _submitMsg(String txt) {
-    List<DocumentSnapshot> databaseDocuments = cc.getAllUsers(id);
+    List<DocumentSnapshot> databaseDocuments = ChatController.getAllUsers(id);
     String userName = databaseDocuments[0]['Name'];
     String photoURL = databaseDocuments[0]['imageURL'];
     _textController.clear();
     setState(() {
       _isWriting = false;
     });
-    cc.createGroupChatMessageFirebase(txt, forumName, userName, photoURL);
+    ChatController.createGroupChatMessageFirebase(txt, forumName, userName, photoURL);
     listScrollController.animateTo(0.0,
         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }

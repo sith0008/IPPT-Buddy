@@ -19,7 +19,6 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
   MyTabsState({this.auth, this.onSignOut});
   final BaseAuth auth;
   final VoidCallback onSignOut;
-  HomeController homeController = new HomeController();
   SharedPreferences prefs;
   String id;
   readLocal() async {
@@ -59,7 +58,6 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     readLocal();
-    homeController.updateAccount(id);
     void _signOut() async {
       try {
         await auth.signOut();

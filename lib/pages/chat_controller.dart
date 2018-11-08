@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ChatController{
 
   /// Returns group chat id of the user and the peer
-  String getGroupChatID(String id, String peerId){
+  static String getGroupChatID(String id, String peerId){
     String groupChatId;
 
     //Returns null if id OR peerId is null
@@ -24,7 +24,7 @@ class ChatController{
   }
 
   ///Generate new chat message in firebase
-  DocumentReference createChatMessageFirebase(String groupChatId){
+  static DocumentReference createChatMessageFirebase(String groupChatId){
     return Firestore.instance
         .collection('chatMessages')
         .document(groupChatId)
@@ -33,7 +33,7 @@ class ChatController{
   }
 
   ///Generate new group chat message in firebase
-  void createGroupChatMessageFirebase(String txt, String forumName, String userName, String photoURL){
+  static void createGroupChatMessageFirebase(String txt, String forumName, String userName, String photoURL){
     DocumentReference documentReference = Firestore.instance
         .collection('forums')
         .document(forumName)
@@ -52,7 +52,7 @@ class ChatController{
   }
 
   ///Upload all details of message to chat message
-  void addMessageDetails(DocumentReference documentReference, String id, String peerId, String content, int type) {
+  static void addMessageDetails(DocumentReference documentReference, String id, String peerId, String content, int type) {
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
         documentReference,
@@ -72,7 +72,7 @@ class ChatController{
 
   ///Check if last message is sent by peer
   ///Returns boolean true/false
-  bool isLastMessageLeft(int index, var listMessage, String id) {
+  static bool isLastMessageLeft(int index, var listMessage, String id) {
     if ((index > 0 &&
         listMessage != null &&
         listMessage[index - 1]['idFrom'] == id) ||
@@ -84,7 +84,7 @@ class ChatController{
   }
 
   ///Checks if last message is sent by user
-  bool isLastMessageRight(int index, var listMessage, String id) {
+  static bool isLastMessageRight(int index, var listMessage, String id) {
     if ((index > 0 &&
         listMessage != null &&
         listMessage[index - 1]['idFrom'] != id) ||
@@ -96,7 +96,7 @@ class ChatController{
   }
 
   ///Get the latest 20 messages from firestore
-  Stream<QuerySnapshot> getChatMessageSnapshot(groupChatId){
+  static Stream<QuerySnapshot> getChatMessageSnapshot(groupChatId){
     return Firestore.instance
         .collection('chatMessages')
         .document(groupChatId)
@@ -108,7 +108,7 @@ class ChatController{
 
   ///Get list of chatusers user is linked to
   ///Shows chat user which the users added in matchMe
-  Stream<QuerySnapshot> getChatuserList(String id){
+  static Stream<QuerySnapshot> getChatuserList(String id){
     return Firestore.instance
         .collection('users')
         .document(id)
@@ -117,7 +117,7 @@ class ChatController{
   }
 
   ///Get group chat messages from firestore
-  Stream<QuerySnapshot> getGroupChatMessages(String forumName){
+  static Stream<QuerySnapshot> getGroupChatMessages(String forumName){
     return Firestore.instance
         .collection('groupChats')
         .document(forumName)
@@ -128,7 +128,7 @@ class ChatController{
   }
 
   ///Get all users
-  getAllUsers(String id) async{
+  static getAllUsers(String id) async{
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('id', isEqualTo: id)
@@ -138,7 +138,7 @@ class ChatController{
   }
 
   ///Get image asset
-  getImageAsset(String imageAsset, double width, double height){
+  static getImageAsset(String imageAsset, double width, double height){
     return new Image.asset(
       imageAsset,
       width: width,

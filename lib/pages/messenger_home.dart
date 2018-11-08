@@ -32,13 +32,13 @@ class MessengerHome extends StatefulWidget {
 class MessengerHomeState extends State<MessengerHome> {
   SharedPreferences prefs;
   String id;
-  ChatController cc = new ChatController();
 
 
   ///Get user's id from SharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
+    print(id);
     setState(() {});
   }
 
@@ -48,7 +48,7 @@ class MessengerHomeState extends State<MessengerHome> {
     readLocal();
     return new Container(
         child: new StreamBuilder(
-            stream: cc.getChatuserList(id),
+            stream: ChatController.getChatuserList(id),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const Text('Loading...');
               return snapshot.data != null

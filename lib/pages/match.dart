@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'match_controller.dart';
 
 class Match extends StatefulWidget {
   @override
@@ -104,8 +105,7 @@ class ShowInfoState extends State<ShowInfo> {
   BuildContext context;
   ShowInfoState(this.context);
   int _activeMeterIndex;
-  List<DocumentSnapshot> databaseDocuments;
-  List<DocumentSnapshot> usersDocuments;
+  MatchController matchController = new MatchController();
 
   SharedPreferences prefs;
   String id;
@@ -117,20 +117,6 @@ class ShowInfoState extends State<ShowInfo> {
 
   void _confirm() {
     confirmDialog(context).then((bool value) {});
-  }
-
-  readData() async {
-    final QuerySnapshot result = await Firestore.instance
-        .collection('users')
-        .where('id', isEqualTo: id)
-        .getDocuments();
-    databaseDocuments = result.documents;
-  }
-
-  readUsers() async {
-    final QuerySnapshot result =
-        await Firestore.instance.collection('users').getDocuments();
-    usersDocuments = result.documents;
   }
 
   Future<bool> confirmDialog(BuildContext context) {
@@ -153,27 +139,20 @@ class ShowInfoState extends State<ShowInfo> {
         });
   }
 
-  List<DocumentSnapshot> userDocuments;
-  readUser() async {
-    final QuerySnapshot result =
-        await Firestore.instance.collection('users').getDocuments();
-    userDocuments = result.documents;
-  }
+
 
 //new new new
   @override
   Widget build(BuildContext context) {
-    readData();
-    readLocal();
     bool Function(QuerySnapshot snapshot){
       return false;
     }
+    String location = "NTU SRC";
     return Container(
         child: new StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance.collection('users').snapshots(),//TODO: add category comparison .where(),
+            stream: matchController.userSnapshots(id, location),
             builder: (context, stream) {
               if (!stream.hasData) return const Text('Loading...');
-              
               return stream.data != null
                   ? new ListView.builder(
                       itemCount: stream.data.documents.length,
@@ -190,47 +169,7 @@ class ShowInfoState extends State<ShowInfo> {
                                   _confirm();
                                   String chatId =
                                       stream.data.documents[i]['id'];
-                                  DocumentReference documentReference =
-                                      Firestore.instance
-                                          .collection('users')
-                                          .document(id)
-                                          .collection('chatUsers')
-                                          .document(chatId);
-                                  Map<String, String> profilesData =
-                                      <String, String>{
-                                    "displayName": stream.data.documents[i]
-                                        ['name'],
-                                    "id": stream.data.documents[i]['id'],
-                                    "photoURL": stream.data.documents[i]
-                                        ['imageURL'],
-                                    "aboutMe": "I am your IPPT buddy!",
-                                  };
-                                  documentReference
-                                      .setData(profilesData, merge: true)
-                                      .whenComplete(() {
-                                    print("chat created");
-                                  }).catchError((e) => print(e));
-                                  print(databaseDocuments[0]['id']);
-                                  DocumentReference documentReference2 =
-                                      Firestore.instance
-                                          .collection('users')
-                                          .document(chatId)
-                                          .collection('chatUsers')
-                                          .document(id);
-                                  Map<String, String> profilesData2 =
-                                      <String, String>{
-                                    "displayName": databaseDocuments[0]['name'],
-                                    "id": databaseDocuments[0]['id'],
-                                    "photoURL": databaseDocuments[0]
-                                        ['imageURL'],
-                                    "aboutMe": "I am your IPPT buddy!",
-                                  };
-                                  documentReference2
-                                      .setData(profilesData2, merge: true)
-                                      .whenComplete(() {
-                                    print("other chat created");
-                                  }).catchError(
-                                          (e) => print("Errorrrrrrrrrrrr" + e));
+                                      matchController.addUserToChat(id, chatId, stream.data.documents[i]);
                                   Navigator.of(context).pop(true);
                                 },
                                 child: new ListTile(

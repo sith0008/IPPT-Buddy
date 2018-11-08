@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import './pages/home_controller.dart';
 
 abstract class BaseAuth {
   Future<String> currentUser();
@@ -28,6 +29,7 @@ class Auth implements BaseAuth {
     FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
         storeLocal(email);
+        HomeController.updateAccount(email);
     return user.uid;
   }
 
