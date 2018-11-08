@@ -3,16 +3,30 @@ import './matchme.dart' as match;
 import './schedule.dart' as schedule;
 import './messenger_home.dart' as chat;
 import './profiles.dart' as profiles;
-import './const.dart';
+import '../auth.dart';
+import 'home_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
-  Home({this.onSignedOut});
-  final VoidCallback onSignedOut;
+  Home({this.auth, this.onSignOut});
+  final BaseAuth auth;
+  final VoidCallback onSignOut;
   @override
-  MyTabsState createState() => new MyTabsState();
+  MyTabsState createState() => new MyTabsState(auth: auth, onSignOut: onSignOut);
 }
 
 class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
+  MyTabsState({this.auth, this.onSignOut});
+  final BaseAuth auth;
+  final VoidCallback onSignOut;
+  HomeController homeController = new HomeController();
+  SharedPreferences prefs;
+  String id;
+  readLocal() async {
+    prefs = await SharedPreferences.getInstance();
+    id = prefs.getString("id").toString() ?? '';
+    setState(() {});
+  }
   final List<MyTabs> _tabs = [
     new MyTabs(title: "IPPT Buddy"),
     new MyTabs(title: "MatchMe"),
@@ -44,6 +58,17 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    readLocal();
+    homeController.updateAccount(id);
+    void _signOut() async {
+      try {
+        await auth.signOut();
+        onSignOut();
+      } catch (e) {
+        print(e);
+      }
+
+    }
     return new Scaffold(
         appBar: new AppBar(
             title: new Text(handler.title),
@@ -63,6 +88,14 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (context) => profiles.Profiles()));
+                },
+              ),
+              new IconButton(
+                icon: new Icon(Icons.exit_to_app),
+                color: new Color(0xFFED2939),
+                tooltip: 'Sign out',
+                onPressed: () {
+                  _signOut();
                 },
               ),
             ]),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
+import './schedule_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Schedule extends StatefulWidget {
@@ -12,6 +14,7 @@ class Schedule extends StatefulWidget {
 }
 
 class ScheduleState extends State<Schedule> {
+  ScheduleController scheduleController = new ScheduleController();
   SharedPreferences prefs;
   String id;
   readLocal() async {
@@ -29,20 +32,12 @@ class ScheduleState extends State<Schedule> {
                 borderRadius: BorderRadius.circular(10.0)),
             margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
             child: new CheckboxListTile(
-                title: Text(document['name']),
-                secondary: Text(document['rep']),
+                title: new Text(document['name']),
+                subtitle: new Text(document['rep'].toString()),
                 value: document['checked'],
                 onChanged: (bool value) {
                   setState(() {
-                    DocumentReference itemRef = Firestore.instance.document(
-                        "users/" + id + "/schedule/" + document['name']);
-                    Map<String, bool> data = <String, bool>{
-                      "checked": value,
-                    };
-                    itemRef
-                        .setData(data, merge: true)
-                        .whenComplete(() {})
-                        .catchError((e) => print(e));
+                    scheduleController.scheduleRef(value, document['name'], id);
                   });
                 })),
       ),
@@ -59,11 +54,24 @@ class ScheduleState extends State<Schedule> {
             children: <Widget>[
               new Expanded(
                   child: new Container(
-                      padding: new EdgeInsets.only(top: 10.0),
+                        color: new Color(0xFFED2939),
+                        child: new Container(
+                          alignment: FractionalOffset(0.1, 0.5),
+                            child: new Text("Window Closes: 20 Dec 2018",
+                                style: new TextStyle(
+                                  color: Colors.white,
+                                    fontFamily: 'Raleway',
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold
+                                    ))),
+                      ),
+                  flex: 1),
+              new Expanded(
+                  child: new Container(
                       child: new Card(
                         color: Colors.white,
                         child: new Center(
-                            child: new Text(new DateTime.now().toString(),
+                            child: new Text(formatDate(new DateTime.now(), [dd, ' ', M, ' ', yyyy]).toString(),
                                 style: new TextStyle(
                                     fontFamily: 'Raleway',
                                     fontSize: 22.0,
@@ -72,11 +80,7 @@ class ScheduleState extends State<Schedule> {
                   flex: 2),
               new Expanded(
                   child: new StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('users')
-                          .document(id)
-                          .collection('schedule')
-                          .snapshots(),
+                      stream: scheduleController.scheduleSnapshots(id),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return const Text('Loading...');
                         return new ListView.builder(
