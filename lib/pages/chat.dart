@@ -5,11 +5,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './const.dart';
+import 'chat_controller.dart';
 
+///UI widget class to display specfic chats between user and peer
 class Chat extends StatelessWidget {
   final String peerId;
   final String peerName;
@@ -17,6 +21,7 @@ class Chat extends StatelessWidget {
   Chat({Key key, @required this.peerId, @required this.peerName})
       : super(key: key);
 
+  ///Build external Scaffold to hold messages
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -32,6 +37,7 @@ class Chat extends StatelessWidget {
   }
 }
 
+///Widget to display list of messages
 class ChatScreen extends StatefulWidget {
   final String peerId;
 
@@ -41,21 +47,29 @@ class ChatScreen extends StatefulWidget {
   State createState() => new ChatScreenState(peerId: peerId);
 }
 
+///Widget to display list of messages, updates whenever a new message is sent/received
 class ChatScreenState extends State<ChatScreen> {
   ChatScreenState({Key key, @required this.peerId});
 
+  //Variables required
   String peerId;
-  String id;
 
   var listMessage;
   String groupChatId;
-  SharedPreferences prefs;
-
+  String id;
   File imageFile;
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
 
+  //Classes used
+  SharedPreferences prefs;
+  ChatController cc = new ChatController(); //Controller class handling all logic from this UI
+
+  //Channel to communicate with java native
+  static const platform = const MethodChannel("ipptbuddy/chatbot");
+
+  //UI classes used
   final TextEditingController textEditingController =
       new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
@@ -66,36 +80,33 @@ class ChatScreenState extends State<ChatScreen> {
     super.initState();
     focusNode.addListener(onFocusChange);
 
+    //Initialise certain variables on UI creation
     groupChatId = '';
-
     isLoading = false;
     isShowSticker = false;
     imageUrl = '';
-
     readLocal();
   }
 
+  ///Hide sticker when keyboard appear
   void onFocusChange() {
     if (focusNode.hasFocus) {
-      // Hide sticker when keyboard appear
+
       setState(() {
         isShowSticker = false;
       });
     }
   }
 
+  //Get user's id from sharedPreference and get groupChatID
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-    if (id.hashCode <= peerId.hashCode) {
-      groupChatId = '$id-$peerId';
-    } else {
-      groupChatId = '$peerId-$id';
-    }
-
+    groupChatId = cc.getGroupChatID(id, peerId);
     setState(() {});
   }
 
+  ///Show Sticker
   void getSticker() {
     // Hide keyboard when sticker appear
     focusNode.unfocus();
@@ -104,6 +115,8 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
+
+  ///Get image from user's gallery
   Future getImage() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -116,6 +129,7 @@ class ChatScreenState extends State<ChatScreen> {
     uploadFile();
   }
 
+  ///Upload file to firestore
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -127,38 +141,47 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       isLoading = false;
     });
-
     onSendMessage(imageUrl, 1);
   }
 
+  ///Send message to firestore
   void onSendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
-
-      var documentReference = Firestore.instance
-          .collection('chatMessages')
-          .document(groupChatId)
-          .collection(groupChatId)
-          .document(DateTime.now().millisecondsSinceEpoch.toString());
-
-      Firestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            'idFrom': id,
-            'idTo': peerId,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            'content': content,
-            'type': type
-          },
-        );
-      });
+      var documentReference = cc.createChatMessageFirebase(groupChatId);
+      cc.addMessageDetails(documentReference, id, peerId, content, type);
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     }
+    if (peerId == 'ipptbuddychatbot@ippt.com') {
+      //Send message to watson server
+      _sendMessageToWatson(content);
+    }else {
+      Fluttertoast.showToast(msg: 'Nothing to send');
+    }
   }
 
+
+  ///Send message to Watson Assistant
+  ///Currently there isn't dart packages that calls to Watson Assistant
+  ///Creates a flutter channel to communicate with java native
+  Future<Null> _sendMessageToWatson(String content) async {
+    try {
+      final String chatbotMessage = await platform
+          .invokeMethod('getChatbotMessage', {'content': content});
+      var documentReference = cc.createChatMessageFirebase(groupChatId);
+      cc.addMessageDetails(documentReference, 'ipptbuddychatbot@ippt.com', id, chatbotMessage, 0);
+      listScrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    } catch (e) {}
+  }
+
+
+  ///Widget to build each message/sticker
+  ///Display messages from user on right
+  ///Display messages from peer on left
+  ///Display timestamp of latest message
   Widget buildItem(int index, DocumentSnapshot document) {
     if (document['idFrom'] == id) {
       // Right (my message)
@@ -177,7 +200,7 @@ class ChatScreenState extends State<ChatScreen> {
                       color: greyColor2,
                       borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                      bottom: cc.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
                       right: 10.0),
                 )
               : document['type'] == 1
@@ -219,7 +242,7 @@ class ChatScreenState extends State<ChatScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       ),
                       margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          bottom: cc.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
                           right: 10.0),
                     )
                   // Sticker
@@ -231,7 +254,7 @@ class ChatScreenState extends State<ChatScreen> {
                         fit: BoxFit.cover,
                       ),
                       margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          bottom: cc.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
                           right: 10.0),
                     ),
         ],
@@ -244,7 +267,7 @@ class ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                isLastMessageLeft(index)
+                  cc.isLastMessageLeft(index, listMessage, id)
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: Container(
@@ -329,14 +352,14 @@ class ChatScreenState extends State<ChatScreen> {
                               fit: BoxFit.cover,
                             ),
                             margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                bottom: cc.isLastMessageRight(index, listMessage,id) ? 20.0 : 10.0,
                                 right: 10.0),
                           ),
               ],
             ),
 
             // Time
-            isLastMessageLeft(index)
+            cc.isLastMessageLeft(index, listMessage, id)
                 ? Container(
                     child: Text(
                       DateFormat('dd MMM kk:mm').format(
@@ -358,28 +381,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  bool isLastMessageLeft(int index) {
-    if ((index > 0 &&
-            listMessage != null &&
-            listMessage[index - 1]['idFrom'] == id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isLastMessageRight(int index) {
-    if ((index > 0 &&
-            listMessage != null &&
-            listMessage[index - 1]['idFrom'] != id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
+  ///Navigate to chat list if user presses back
   Future<bool> onBackPress() {
     if (isShowSticker) {
       setState(() {
@@ -392,8 +394,10 @@ class ChatScreenState extends State<ChatScreen> {
     return Future.value(false);
   }
 
+  ///Build specific chat widget
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       child: Stack(
         children: <Widget>[
@@ -401,15 +405,12 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               // List of messages
               buildListMessage(),
-
               // Sticker
               (isShowSticker ? buildSticker() : Container()),
-
               // Input content
               buildInput(),
             ],
           ),
-
           // Loading
           buildLoading()
         ],
@@ -418,6 +419,8 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+
+  ///Get sticker from assets and displays them in keyboard sticker tab
   Widget buildSticker() {
     return Container(
       child: Column(
@@ -426,30 +429,16 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               FlatButton(
                 onPressed: () => onSendMessage('mimi1', 2),
-                child: new Image.asset(
-                  'assets/mimi1.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi1.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi2', 2),
-                child: new Image.asset(
-                  'assets/mimi2.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi2.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi3', 2),
-                child: new Image.asset(
-                  'assets/mimi3.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child:
+                  cc.getImageAsset('assets/mimi3.gif', 50.0, 50.0)
               )
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -458,30 +447,15 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               FlatButton(
                 onPressed: () => onSendMessage('mimi4', 2),
-                child: new Image.asset(
-                  'assets/mimi4.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi4.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi5', 2),
-                child: new Image.asset(
-                  'assets/mimi5.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi5.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi6', 2),
-                child: new Image.asset(
-                  'assets/mimi6.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi6.gif', 50.0, 50.0)
               )
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -490,30 +464,15 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               FlatButton(
                 onPressed: () => onSendMessage('mimi7', 2),
-                child: new Image.asset(
-                  'assets/mimi7.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi7.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi8', 2),
-                child: new Image.asset(
-                  'assets/mimi8.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi8.gif', 50.0, 50.0)
               ),
               FlatButton(
                 onPressed: () => onSendMessage('mimi9', 2),
-                child: new Image.asset(
-                  'assets/mimi9.gif',
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
+                child: cc.getImageAsset('assets/mimi9.gif', 50.0, 50.0)
               )
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -530,6 +489,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  ///Widget showing loading message while waiting for messages from Firestore
   Widget buildLoading() {
     return Positioned(
       child: isLoading
@@ -544,6 +504,8 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  ///Widget to create keyboard for user to type message
+  ///Includes tab to allow user to send specific stickers
   Widget buildInput() {
     return Container(
       child: Row(
@@ -594,6 +556,8 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  ///Widget to build list of messages
+  ///Extracts last 20 messages from firestore and displays them
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
@@ -601,13 +565,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
           : StreamBuilder(
-              stream: Firestore.instance
-                  .collection('chatMessages')
-                  .document(groupChatId)
-                  .collection(groupChatId)
-                  .orderBy('timestamp', descending: true)
-                  .limit(20)
-                  .snapshots(),
+              stream: cc.getChatMessageSnapshot(groupChatId),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(

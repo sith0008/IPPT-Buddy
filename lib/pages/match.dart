@@ -165,11 +165,15 @@ class ShowInfoState extends State<ShowInfo> {
   Widget build(BuildContext context) {
     readData();
     readLocal();
+    bool Function(QuerySnapshot snapshot){
+      return false;
+    }
     return Container(
-        child: new StreamBuilder(
-            stream: Firestore.instance.collection('users').snapshots(),
+        child: new StreamBuilder<QuerySnapshot>(
+            stream: Firestore.instance.collection('users').snapshots(),//TODO: add category comparison .where(),
             builder: (context, stream) {
               if (!stream.hasData) return const Text('Loading...');
+              
               return stream.data != null
                   ? new ListView.builder(
                       itemCount: stream.data.documents.length,

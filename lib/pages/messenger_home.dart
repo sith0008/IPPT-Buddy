@@ -3,19 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './chat.dart';
+import 'chat_controller.dart';
 
+
+///UI theme for iOS
 final ThemeData iOSTheme = new ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.white,
   primaryColorBrightness: Brightness.light,
 );
 
+///UI theme for android
 final ThemeData androidTheme = new ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.white,
   primaryColorBrightness: Brightness.light,
 );
 
+///UI class to display the list of chats to the user
 class MessengerHome extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -23,25 +28,27 @@ class MessengerHome extends StatefulWidget {
   }
 }
 
+///UI state which updates whenever database is changed
 class MessengerHomeState extends State<MessengerHome> {
   SharedPreferences prefs;
   String id;
+  ChatController cc = new ChatController();
+
+
+  ///Get user's id from SharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
+  ///Build list of chats, display 'loading' if firestore has yet to return any ReferenceDocument
   @override
   Widget build(BuildContext context) {
     readLocal();
     return new Container(
         child: new StreamBuilder(
-            stream: Firestore.instance
-                .collection('users')
-                .document(id)
-                .collection('chatUsers')
-                .snapshots(),
+            stream: cc.getChatuserList(id),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const Text('Loading...');
               return snapshot.data != null
@@ -53,10 +60,12 @@ class MessengerHomeState extends State<MessengerHome> {
                           _buildChats(context, snapshot.data.documents[index]),
                     )
                   : new Container();
-            }));
+            })
+    );
   }
 }
 
+///Build and dsiplay list of chats to user
 Widget _buildChats(BuildContext context, DocumentSnapshot document) {
   return new ListTile(
       leading: new CircleAvatar(
