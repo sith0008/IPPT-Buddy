@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './pages/login_page.dart';
+import './root_page.dart';
+import './auth.dart';
 import 'package:flutter/services.dart';
 
 void main() {
@@ -10,18 +11,15 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AirVenue',
-      home: LoginPage()
+    return new MaterialApp(
+      title: 'IPPT Buddy',
+      theme: new ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: new RootPage(auth: new Auth()),
     );
-    // return AuthProvider(
-    //   auth: Auth(),
-    //   child: MaterialApp(
-    //     title: 'AirVenue',
-    //     home: LoginPage(),
-    //   ),
-    // );
   }
 }
