@@ -22,6 +22,7 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -59,9 +60,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.ibm.watson.developer_cloud:java-sdk:6.6.0'
-    compile 'com.android.support:multidex:1.0.0'
-
+    api 'com.ibm.watson.developer_cloud:java-sdk:6.6.0'
+    api 'com.android.support:multidex:1.0.0'
+    api 'com.google.maps.android:android-maps-utils:0.5'
+    api 'com.google.android.gms:play-services-maps:16.0.0'
+    api 'com.google.android.gms:play-services-location:8.4.0'
 }
 
-apply plugin: 'com.google.gms.google-services'

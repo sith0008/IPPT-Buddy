@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import './root_page.dart';
 import './auth.dart';
 import 'package:flutter/services.dart';
+import 'package:map_view/map_view.dart';
+
+const API_KEY = "AIzaSyCnU0dF2qUj8RyWqRT7kCeMHjfR0ZZkMb0";
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
+    MapView.setApiKey(API_KEY);
     runApp(new MaterialApp(home: new App()));
   });
 }

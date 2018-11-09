@@ -7,6 +7,7 @@ import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import io.flutter.plugins.firebase.storage.FirebaseStoragePlugin;
 import io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin;
 import io.flutter.plugins.imagepicker.ImagePickerPlugin;
+import com.apptreesoftware.mapview.MapViewPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 
@@ -24,6 +25,7 @@ public final class GeneratedPluginRegistrant {
     FirebaseStoragePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.storage.FirebaseStoragePlugin"));
     FluttertoastPlugin.registerWith(registry.registrarFor("io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin"));
     ImagePickerPlugin.registerWith(registry.registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"));
+    MapViewPlugin.registerWith(registry.registrarFor("com.apptreesoftware.mapview.MapViewPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
     SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
   }

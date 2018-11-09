@@ -9,6 +9,7 @@
 #import <firebase_storage/FirebaseStoragePlugin.h>
 #import <fluttertoast/FluttertoastPlugin.h>
 #import <image_picker/ImagePickerPlugin.h>
+#import <map_view/MapViewPlugin.h>
 #import <path_provider/PathProviderPlugin.h>
 #import <shared_preferences/SharedPreferencesPlugin.h>
 
@@ -21,6 +22,7 @@
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [MapViewPlugin registerWithRegistrar:[registry registrarForPlugin:@"MapViewPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
 }
