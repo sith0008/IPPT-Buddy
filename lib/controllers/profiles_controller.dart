@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilesController {
   
-  bool fieldFilled(String _nickName, String _min, String _sec, String _award,
+  static bool fieldFilled(String _nickName, String _min, String _sec, String _award,
       String _pushUp, String _sitUp, String _dateValue) {
     if (_nickName != null &&
         _min != null &&
@@ -17,14 +17,14 @@ class ProfilesController {
     }
   }
 
-  String findTiming(String _min, String _sec) {
+  static String findTiming(String _min, String _sec) {
     int min = int.parse(_min) * 60;
     int sec = int.parse(_sec);
     int time = min + sec;
     return time.toString();
   }
 
-  void updateProfile(String nickName, String time, String pushUp, String sitUp,
+  static void updateProfile(String nickName, String time, String pushUp, String sitUp,
       String award, String date, String id) {
     DocumentReference profileReference =
         Firestore.instance.collection('users').document(id);
@@ -41,7 +41,7 @@ class ProfilesController {
     }).catchError((e) => print(e));
   }
 
-  void updateSchedule(String pushUp, String sitUp, String _min, String _sec, String id) {
+  static void updateSchedule(String pushUp, String sitUp, String _min, String _sec, String id) {
     int pUrep = int.parse(pushUp) + 5;
     int sUrep = int.parse(sitUp) + 5;
     int sec;
@@ -84,4 +84,10 @@ class ProfilesController {
       print("schedule updated");
     }).catchError((e) => print(e));
   }
+
+  static bool validSecMin(String s){
+    int second = int.parse(s);
+    return second < 60 && second >= 0;
+  }
+
 }

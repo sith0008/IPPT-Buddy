@@ -13,7 +13,6 @@ class Profiles extends StatefulWidget {
 }
 
 class _ProfilesState extends State<Profiles> {
-  ProfilesController profilesController = new ProfilesController();
     SharedPreferences prefs;
   String id;
   readLocal() async {
@@ -193,9 +192,11 @@ class _ProfilesState extends State<Profiles> {
                         new Expanded(
                           child: new TextField(
                             onChanged: (String m) {
-                              setState(() {
-                                _min = m;
-                              });
+                              if(ProfilesController.validSecMin(m)) {
+                                setState(() {
+                                  _min = m;
+                                });
+                              }
                             },
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
@@ -214,9 +215,11 @@ class _ProfilesState extends State<Profiles> {
                           child: new TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String s) {
-                              setState(() {
-                                _sec = s;
-                              });
+                              if(ProfilesController.validSecMin(s)){
+                                setState(() {
+                                  _sec = s;
+                                });
+                              }
                             },
                             decoration: InputDecoration(
                                 labelText: 'Sec',
@@ -332,10 +335,10 @@ class _ProfilesState extends State<Profiles> {
                     minWidth: 300.0,
                     child: FlatButton(
                       onPressed: () {
-                        if (profilesController.fieldFilled(_nickName, _min, _sec, _award, _pushUp, _sitUp, _dateValue)) {
-                          _time = profilesController.findTiming(_min, _sec);
-                          profilesController.updateProfile(_nickName, _time, _pushUp, _sitUp, _award, _dateValue, id);
-                          profilesController.updateSchedule(_pushUp, _sitUp, _min, _sec, id);
+                        if (ProfilesController.fieldFilled(_nickName, _min, _sec, _award, _pushUp, _sitUp, _dateValue)) {
+                          _time = ProfilesController.findTiming(_min, _sec);
+                          ProfilesController.updateProfile(_nickName, _time, _pushUp, _sitUp, _award, _dateValue, id);
+                          ProfilesController.updateSchedule(_pushUp, _sitUp, _min, _sec, id);
                           Navigator.of(context).pop(true);
                           _confirm();
                         } else {
