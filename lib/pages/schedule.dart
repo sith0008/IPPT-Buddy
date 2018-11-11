@@ -58,6 +58,7 @@ class ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
     readLocal();
+    String date = ScheduleController.dateRef(id);
     return new Container(
         color: Colors.grey[200],
         child: new Column(
@@ -68,7 +69,7 @@ class ScheduleState extends State<Schedule> {
                     color: new Color(0xFFED2939),
                     child: new Container(
                         alignment: FractionalOffset(0.1, 0.5),
-                        child: new Text("Window Closes: 20 Dec 2018",
+                        child: new Text("Window Closes: " + date,
                             style: new TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Raleway',

@@ -1,4 +1,3 @@
-import 'match.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,10 @@ import 'package:map_view/figure_joint_type.dart';
 import 'package:map_view/map_view.dart';
 import 'package:map_view/polygon.dart';
 import 'package:map_view/polyline.dart';
+import './match_users.dart';
+import 'package:ipptbuddy/controllers/match_controller.dart';
+import 'package:date_format/date_format.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const API_KEY = "AIzaSyCnU0dF2qUj8RyWqRT7kCeMHjfR0ZZkMb0";
 
@@ -15,10 +18,9 @@ class MatchMe extends StatefulWidget {
 }
 
 class _MatchMeState extends State<MatchMe> {
-
-
   MapView mapView = new MapView();
   CameraPosition cameraPosition;
+  SharedPreferences prefs;
   var compositeSubscription = new CompositeSubscription();
   var staticMapProvider = new StaticMapProvider(API_KEY);
   Uri staticMapUri;
@@ -486,248 +488,208 @@ class _MatchMeState extends State<MatchMe> {
   } */
   //Drawing
 
-
   @override
   initState() {
     super.initState();
-    cameraPosition = new CameraPosition(Location(1.3630284240099342,103.84966846799315), 2.0);
-    staticMapUri = staticMapProvider.getStaticUri(Location(1.3630284240099342,103.84966846799315), 12,
+    cameraPosition = new CameraPosition(
+        Location(1.3630284240099342, 103.84966846799315), 2.0);
+    staticMapUri = staticMapProvider.getStaticUri(
+        Location(1.3630284240099342, 103.84966846799315), 12,
         width: 900, height: 400, mapType: StaticMapViewType.roadmap);
   }
-  Future _matchMe(BuildContext context) async {
-    String forumName;
-    String forumDesc;
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) => new Dialog(
-        child: new SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              new Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 10.0,
-                ),
-                child: Text("Select date and time",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    )),
-                color: Color(0xFF1D4886),
-              ),
-              new Container(
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: FloatingActionButton(
-                          onPressed: () {},
-                          backgroundColor: Color(0xFF1D4886),
-                          child: Icon(Icons.add_a_photo)),
-                    ),
-                    new Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: new Text("Add a Picture"),
-                    )
-                  ],
-                ),
-              ),
-              new Container(
-                padding: EdgeInsets.all(5.0),
-                child: new Card(
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: Text(
-                          "Forum Name:",
-                          style: TextStyle(
-                            color: Color(0xFF1D4886),
-                          ),
-                        ),
-                      ),
-                      new Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: new TextField(
-                          onChanged: (String name) {
-                            forumName = name;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFF1D4886), width: 0.5)),
-                          ),
-                          maxLines: 2,
-                        ),
-                      ),
-                      new Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: Text(
-                          "Forum Description:",
-                          style: TextStyle(
-                            color: Color(0xFF1D4886),
-                          ),
-                        ),
-                      ),
-                      new Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: new TextField(
-                          onChanged: (String desc) {
-                            forumDesc = desc;
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFF1D4886), width: 0.5))),
-                          maxLines: 6,
-                        ),
-                      ),
-                      new Align(
-                          alignment: Alignment.bottomRight,
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              new FlatButton(
-                                  onPressed: () {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                  child: Text("GROUP",
-                                      style: TextStyle(
-                                          color: Color(0xFF1D4886)))),
-                              new FlatButton(
-                                  onPressed: () {
-                                    print(forumName);
-                                    print(forumDesc);
-                                    if (forumName == null ||
-                                        forumDesc == null) {
-                                      showDialog(
-                                        context: context,
-                                        child: new AlertDialog(
-                                          content: Text(
-                                              "Please fill in required fields"),
-                                          title:
-                                          Text("Incomplete information"),
-                                        ),
-                                      );
-                                    } else {
-                                      /* DocumentReference documentReference =
-                                            Firestore.instance
-                                                .collection('forums')
-                                                .document(forumName);
-                                        Map<String, String> forumData =
-                                            <String, String>{
-                                          "name": forumName,
-                                          "description": forumDesc,
-                                          "imageURL":
-                                              "https://d30zbujsp7ao6j.cloudfront.net/wp-content/uploads/2017/07/unnamed.png",
-                                              "https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png",
-                                          "count": "1",
-                                        };
-                                        documentReference
-                                            .setData(forumData, merge: true)
-                                            .whenComplete(() {
-                                          print("forum created");
-                                          //print(count.toString());
-                                          //print(prevMessage);
-                                        }).catchError((e) => print(e)); */
-                                    }
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                  child: Text("SOLO",
-                                      style: TextStyle(
-                                          color: Color(0xFF1D4886)))),
-                            ],
-                          )),
-                    ],
-                  ),
-                  color: Colors.grey[50],
-                  elevation: 3.0,
-                ),
-              ),
+
+  String date;
+  Future _selectDate() async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: new DateTime.now(),
+        firstDate: new DateTime(2018),
+        lastDate: new DateTime(2020));
+    if (picked != null)
+      setState(
+          () => date = formatDate(picked, [dd, ' ', M, ' ', yyyy]).toString());
+  }
+
+  String id;
+  //Get user's id from sharedPreference and get groupChatID
+  readLocal() async {
+    prefs = await SharedPreferences.getInstance();
+    id = prefs.getString('id') ?? '';
+    setState(() {});
+  }
+
+  void _confirm() {
+    confirmDialog(context).then((bool value) {});
+  }
+
+  Future<bool> confirmDialog(BuildContext context) {
+    return showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text("User Added"),
+            content: new Text(
+                "This location group chat has been added to your chats! Swipe right to go to chat tab to start chatting with the group!"),
+            actions: <Widget>[
+              new FlatButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              )
             ],
-          ),
-        ),
-      ),
-    );
+          );
+        });
+  }
+
+  void _confirmNull() {
+    nullDialog(context).then((bool value) {});
+  }
+
+  Future<bool> nullDialog(BuildContext context) {
+    return showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text("Sorry"),
+            content: new Text("Please enter your location and date!"),
+            actions: <Widget>[
+              new FlatButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
+    readLocal();
     return new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        new Container(
+          height: 250.0,
+          child: new Stack(
             children: <Widget>[
-              new Container(
-                height: 250.0,
-                child: new Stack(
-                  children: <Widget>[
-                    new Center(
-                        child: new Container(
-                          child: new Text(
-                            "You are supposed to see a map here.\n\nAPI Key is not valid.\n\n"
-                                "To view maps in the example application set the "
-                                "API_KEY variable in example/lib/main.dart. "
-                                "\n\nIf you have set an API Key but you still see this text "
-                                "make sure you have enabled all of the correct APIs "
-                                "in the Google API Console. See README for more detail.",
-                            textAlign: TextAlign.center,
-                          ),
-                          padding: const EdgeInsets.all(20.0),
-                        )),
-                    new InkWell(
-                      child: new Center(
-                        child: new Image.network(staticMapUri.toString()),
-                      ),
-                      onTap: showMap,
-                    )
-                  ],
-                ),
-              ),
-              new Container(
-                padding: new EdgeInsets.only(top: 10.0),
+              new Center(
+                  child: new Container(
                 child: new Text(
+                  "You are supposed to see a map here.\n\nAPI Key is not valid.\n\n"
+                      "To view maps in the example application set the "
+                      "API_KEY variable in example/lib/main.dart. "
+                      "\n\nIf you have set an API Key but you still see this text "
+                      "make sure you have enabled all of the correct APIs "
+                      "in the Google API Console. See README for more detail.",
+                  textAlign: TextAlign.center,
+                ),
+                padding: const EdgeInsets.all(20.0),
+              )),
+              new InkWell(
+                child: new Center(
+                  child: new Image.network(staticMapUri.toString()),
+                ),
+                onTap: showMap,
+              )
+            ],
+          ),
+        ),
+        new Container(
+          padding: new EdgeInsets.only(top: 10.0),
+          child: location != null
+              ? Text(location,
+                  style: new TextStyle(fontWeight: FontWeight.bold))
+              : new Text(
                   "Tap the map to choose your location",
                   style: new TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-              new Container(
-                  padding: new EdgeInsets.only(top: 25.0),
-                  child:
-                  new Column(
-                    children: <Widget>[
-                      new Container(child:
-                      location != null
-                          ? Text(location)
-                          : Text("Select your location"),
-                      ),
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new Text("ENTER DATE HERE"),
-                          new Text("ENTER TIMEE HERE"),
-                        ],),
-                      new Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new RaisedButton(
-                            child: Text("SOLO"),
-                          ),
-                          new RaisedButton(
-                            child: Text("GROUP"),
-                          ),
-                        ],
-                      )
-                    ],)
-              ),
-            ],
+        ),
+        new Container(
+            padding: new EdgeInsets.only(top: 20.0),
+            child: new Column(
+              children: <Widget>[
+                new Container(
+                    decoration: new BoxDecoration(
+                        border: new Border.all(color: Colors.black)),
+                    height: 50.0,
+                    margin: new EdgeInsets.only(bottom: 30.0),
+                    child: new ButtonTheme(
+                      minWidth: 300.0,
+                      child: new FlatButton(
+                          onPressed: _selectDate,
+                          color: Colors.white,
+                          child: date != null
+                              ? Text(date,
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0))
+                              : new Text('Set Date',
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0))),
+                    )),
+                new Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Expanded(
+                        child: new Card(
+                            color: new Color(0xFFED2939),
+                            child: new ButtonTheme(
+                                height: 70.0,
+                                child: new RaisedButton(
+                                    color: new Color(0xFFED2939),
+                                    child: Text("FIND BUDDY",
+                                        style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      if (MatchController.fieldFilled(
+                                          location, date)) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MatchUsers(
+                                                        location: location,
+                                                        date: date)));
+                                      } else {
+                                        _confirmNull();
+                                      }
+                                    }))),
+                        flex: 1),
+                    new Expanded(
+                        child: new Card(
+                            color: new Color(0xFFED2939),
+                            child: new ButtonTheme(
+                                height: 70.0,
+                                child: new RaisedButton(
+                                    color: new Color(0xFFED2939),
+                                    child: Text(
+                                      "FIND GROUP",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      if (MatchController.fieldFilled(
+                                          location, date)) {
+                                        MatchController.addGroupChat(
+                                            id, location);
+                                        _confirm();
+                                      } else {
+                                        _confirmNull();
+                                      }
+                                    }))),
+                        flex: 1),
+                  ],
+                )
+              ],
+            )),
+      ],
     );
   }
+
   String location;
   showMap() {
     mapView.show(
@@ -737,7 +699,8 @@ class _MatchMeState extends State<MatchMe> {
             showMyLocationButton: true,
             showCompassButton: true,
             initialCameraPosition: new CameraPosition(
-                new Location(1.3449742165657,103.747781014088), 15.0),
+                new Location(1.3483, 103.6831),
+                15.0), //1.3449742165657, 103.747781014088
             hideToolbar: false,
             title: "Recently Visited"),
         toolbarActions: [new ToolbarAction("Close", 1)]);
@@ -751,8 +714,7 @@ class _MatchMeState extends State<MatchMe> {
       print("Location updated $location");
     });
     compositeSubscription.add(sub);
-    sub = mapView.onTouchAnnotation
-        .listen((annotation) {
+    sub = mapView.onTouchAnnotation.listen((annotation) {
       mapView.dismiss();
       location = annotation.title;
     });
@@ -763,8 +725,8 @@ class _MatchMeState extends State<MatchMe> {
     sub = mapView.onTouchPolygon
         .listen((polygon) => print("polygon ${polygon.id} tapped"));
     compositeSubscription.add(sub);
-    sub = mapView.onMapTapped
-        .listen((location) { print("Touched location $location");
+    sub = mapView.onMapTapped.listen((location) {
+      print("Touched location $location");
     });
     compositeSubscription.add(sub);
     sub = mapView.onCameraChanged.listen((cameraPosition) =>
@@ -781,8 +743,8 @@ class _MatchMeState extends State<MatchMe> {
     sub = mapView.onAnnotationDrag.listen((markerMap) {
       var marker = markerMap.keys.first;
       var location = markerMap[marker];
-      print("Annotation ${marker.id} moved to ${location.latitude} , ${location
-          .longitude}");
+      print(
+          "Annotation ${marker.id} moved to ${location.latitude} , ${location.longitude}");
     });
     compositeSubscription.add(sub);
     sub = mapView.onToolbarAction.listen((id) {
@@ -815,7 +777,6 @@ class _MatchMeState extends State<MatchMe> {
     mapView.dismiss();
     compositeSubscription.cancel();
   }
-
 }
 
 class CompositeSubscription {

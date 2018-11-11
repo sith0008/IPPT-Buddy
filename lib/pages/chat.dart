@@ -27,6 +27,9 @@ class Chat extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(peerName),
+        iconTheme: IconThemeData(
+          color: new Color(0xFFED2939),
+        ),
         backgroundColor: Colors.white,
         textTheme: Theme.of(context).textTheme.apply(
               bodyColor: new Color(0xFFED2939),
@@ -162,7 +165,7 @@ class ChatScreenState extends State<ChatScreen> {
       //Send message to watson server
       _sendMessageToWatson(content);
     } else {
-      Fluttertoast.showToast(msg: 'Nothing to send');
+      Fluttertoast.showToast(msg: 'Message Sent!');
     }
   }
 
@@ -294,7 +297,7 @@ class ChatScreenState extends State<ChatScreen> {
                             padding: EdgeInsets.all(10.0),
                           ),
                           imageUrl:
-                              "https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png", // TODO: add link to pic here
+                              "https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png",
                           width: 35.0,
                           height: 35.0,
                           fit: BoxFit.cover,

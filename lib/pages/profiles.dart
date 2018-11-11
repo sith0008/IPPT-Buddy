@@ -6,20 +6,20 @@ import 'package:ipptbuddy/controllers/profiles_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Profiles extends StatefulWidget {
   @override
   _ProfilesState createState() => _ProfilesState();
 }
 
 class _ProfilesState extends State<Profiles> {
-    SharedPreferences prefs;
+  SharedPreferences prefs;
   String id;
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
+
   var _image;
   var image;
 
@@ -192,7 +192,7 @@ class _ProfilesState extends State<Profiles> {
                         new Expanded(
                           child: new TextField(
                             onChanged: (String m) {
-                              if(ProfilesController.validSecMin(m)) {
+                              if (ProfilesController.validSecMin(m)) {
                                 setState(() {
                                   _min = m;
                                 });
@@ -215,7 +215,7 @@ class _ProfilesState extends State<Profiles> {
                           child: new TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String s) {
-                              if(ProfilesController.validSecMin(s)){
+                              if (ProfilesController.validSecMin(s)) {
                                 setState(() {
                                   _sec = s;
                                 });
@@ -320,12 +320,17 @@ class _ProfilesState extends State<Profiles> {
                         )
                       ],
                     ),
-                    title: new RaisedButton(
-                      onPressed: _selectDate,
-                      color: Colors.white,
-                      child: new Text('Set Date'),
+                    title: new Container(
+                      decoration: new BoxDecoration(
+                          border: new Border.all(color: Colors.black)),
+                      child: new FlatButton(
+                          onPressed: _selectDate,
+                          color: Colors.white,
+                          child: _dateValue != ''
+                              ? Text(_dateValue)
+                              : new Text('Set Date')),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -335,10 +340,13 @@ class _ProfilesState extends State<Profiles> {
                     minWidth: 300.0,
                     child: FlatButton(
                       onPressed: () {
-                        if (ProfilesController.fieldFilled(_nickName, _min, _sec, _award, _pushUp, _sitUp, _dateValue)) {
+                        if (ProfilesController.fieldFilled(_nickName, _min,
+                            _sec, _award, _pushUp, _sitUp, _dateValue)) {
                           _time = ProfilesController.findTiming(_min, _sec);
-                          ProfilesController.updateProfile(_nickName, _time, _pushUp, _sitUp, _award, _dateValue, id);
-                          ProfilesController.updateSchedule(_pushUp, _sitUp, _min, _sec, id);
+                          ProfilesController.updateProfile(_nickName, _time,
+                              _pushUp, _sitUp, _award, _dateValue, id, _min, _sec);
+                          ProfilesController.updateSchedule(
+                              _pushUp, _sitUp, _min, _sec, id);
                           Navigator.of(context).pop(true);
                           _confirm();
                         } else {

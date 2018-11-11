@@ -8,7 +8,7 @@ class HomeController {
         .collection('users')
         .document(id)
         .collection('chatUsers')
-        .document('ipptbuddychatbot@ippt.com');
+        .document('1_ChatBot');
     Map<String, String> chatData = <String, String>{
       "aboutMe": "I am a chatbot!",
       "id": "ipptbuddychatbot@ippt.com",

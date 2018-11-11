@@ -25,7 +25,8 @@ class ProfilesController {
   }
 
   static void updateProfile(String nickName, String time, String pushUp, String sitUp,
-      String award, String date, String id) {
+      String award, String date, String id, String _min, String _sec) {
+    String matchTime = _min.toString() + " Mins " + _sec.toString() + " Sec";
     DocumentReference profileReference =
         Firestore.instance.collection('users').document(id);
     Map<String, dynamic> profilesData = <String, dynamic>{
@@ -34,7 +35,10 @@ class ProfilesController {
       "pushup": pushUp,
       "situp": sitUp,
       "award": award,
-      "date": date
+      "date": date,
+      "id": id,
+      "imageURL": 'http://www.desiformal.com/assets/images/default-userAvatar.png',
+      "matchRun": matchTime
     };
     profileReference.setData(profilesData, merge: true).whenComplete(() {
       print("profile created");

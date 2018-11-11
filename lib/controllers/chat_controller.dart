@@ -33,10 +33,10 @@ class ChatController{
   }
 
   ///Generate new group chat message in firebase
-  static void createGroupChatMessageFirebase(String txt, String forumName, String userName, String photoURL){
+  static void createGroupChatMessageFirebase(String txt, String groupName, String userName, String photoURL){
     DocumentReference documentReference = Firestore.instance
-        .collection('forums')
-        .document(forumName)
+        .collection('groupChats')
+        .document(groupName)
         .collection('messages')
         .document(DateTime.now().millisecondsSinceEpoch.toString());
     Map<String, String> profilesData = <String, String>{
@@ -117,10 +117,10 @@ class ChatController{
   }
 
   ///Get group chat messages from firestore
-  static Stream<QuerySnapshot> getGroupChatMessages(String forumName){
+  static Stream<QuerySnapshot> getGroupChatMessages(String groupName){
     return Firestore.instance
         .collection('groupChats')
-        .document(forumName)
+        .document(groupName)
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .limit(20)

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './chat.dart';
+import './chat_group.dart';
 import 'package:ipptbuddy/controllers/chat_controller.dart';
-
 
 ///UI theme for iOS
 final ThemeData iOSTheme = new ThemeData(
@@ -33,12 +33,10 @@ class MessengerHomeState extends State<MessengerHome> {
   SharedPreferences prefs;
   String id;
 
-
   ///Get user's id from SharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
-    print(id);
     setState(() {});
   }
 
@@ -60,8 +58,7 @@ class MessengerHomeState extends State<MessengerHome> {
                           _buildChats(context, snapshot.data.documents[index]),
                     )
                   : new Container();
-            })
-    );
+            }));
   }
 }
 
@@ -88,12 +85,19 @@ Widget _buildChats(BuildContext context, DocumentSnapshot document) {
             style: new TextStyle(fontWeight: FontWeight.bold)),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                Chat(peerId: document['id'], peerName: document['displayName']),
-          ),
-        );
+        if (document['type'] == 'personal') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Chat(
+                  peerId: document['id'], peerName: document['displayName']),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChatGroup(document['displayName'])),
+          );
+        }
       });
 }
