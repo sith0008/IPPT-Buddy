@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:ipptbuddy/pages/chat_controller.dart';
+import 'package:ipptbuddy/controllers/chat_controller.dart';
 
 
 ///Unit testing of chat_controller class (whitebox testing)
