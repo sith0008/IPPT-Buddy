@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MatchController {
-  List<DocumentSnapshot> databaseDocuments;
-  List<DocumentSnapshot> usersDocuments;
-  void readData(String id) async {
+  static List<DocumentSnapshot> databaseDocuments;
+  static List<DocumentSnapshot> usersDocuments;
+  static void readData(String id) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('id', isEqualTo: id)
@@ -11,27 +11,27 @@ class MatchController {
     databaseDocuments = result.documents;
   }
 
-  void readUsers() async {
+  static void readUsers() async {
     final QuerySnapshot result =
         await Firestore.instance.collection('users').getDocuments();
     usersDocuments = result.documents;
   }
 
-  List<DocumentSnapshot> userDocuments;
-  void readUser() async {
+  static List<DocumentSnapshot> userDocuments;
+  static void readUser() async {
     final QuerySnapshot result =
         await Firestore.instance.collection('users').getDocuments();
     userDocuments = result.documents;
   }
 
-  Stream<QuerySnapshot> userSnapshots(String id, String location) {
+  static Stream<QuerySnapshot> userSnapshots(String id, String location) {
     return Firestore.instance
         .collection('users')
         .where('location', isEqualTo: location)
         .snapshots();
   }
 
-  void addUserToChat(String id, String chatId, DocumentSnapshot snapshot) {
+  static void addUserToChat(String id, String chatId, DocumentSnapshot snapshot) {
     readData(id);
     readUser();
     readUser();

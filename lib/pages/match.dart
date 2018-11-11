@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'match_controller.dart';
+import 'package:ipptbuddy/controllers/match_controller.dart';
 
+// UI widget to display page with scaffold and appbar
 class Match extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -13,11 +14,15 @@ class Match extends StatefulWidget {
   }
 }
 
+
+// Widget to display scaffold and appbar
 class _MatchState extends State<Match> {
+  // Function to call info dialog
   void _info() {
     infoDialog(context).then((bool value) {});
   }
 
+  // info dialog to give information on the page and how to use the page
   Future<bool> infoDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -40,6 +45,7 @@ class _MatchState extends State<Match> {
         });
   }
 
+  // Build an external Scaffold to hold the contents of list of users
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -94,6 +100,7 @@ class _MatchState extends State<Match> {
   }
 }
 
+// UI widget class to display list of users to match
 class ShowInfo extends StatefulWidget {
   final BuildContext context;
   ShowInfo(this.context);
@@ -101,24 +108,30 @@ class ShowInfo extends StatefulWidget {
   ShowInfoState createState() => ShowInfoState(context);
 }
 
+// Widget to display lists of users
 class ShowInfoState extends State<ShowInfo> {
-  BuildContext context;
   ShowInfoState(this.context);
-  int _activeMeterIndex;
-  MatchController matchController = new MatchController();
 
+  // Classes used
+  BuildContext context;
   SharedPreferences prefs;
+
+  // Variables required
   String id;
+
+  //Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
+ // Function to call confirmation dialog
   void _confirm() {
     confirmDialog(context).then((bool value) {});
   }
 
+  // Confirmation dialog to inform user that user is added to his chats when he press the 'chat' button
   Future<bool> confirmDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -139,9 +152,7 @@ class ShowInfoState extends State<ShowInfo> {
         });
   }
 
-
-
-//new new new
+  // Widget to build list of users
   @override
   Widget build(BuildContext context) {
     bool Function(QuerySnapshot snapshot){
@@ -150,7 +161,7 @@ class ShowInfoState extends State<ShowInfo> {
     String location = "NTU SRC";
     return Container(
         child: new StreamBuilder<QuerySnapshot>(
-            stream: matchController.userSnapshots(id, location),
+            stream: MatchController.userSnapshots(id, location),
             builder: (context, stream) {
               if (!stream.hasData) return const Text('Loading...');
               return stream.data != null
@@ -169,7 +180,7 @@ class ShowInfoState extends State<ShowInfo> {
                                   _confirm();
                                   String chatId =
                                       stream.data.documents[i]['id'];
-                                      matchController.addUserToChat(id, chatId, stream.data.documents[i]);
+                                      MatchController.addUserToChat(id, chatId, stream.data.documents[i]);
                                   Navigator.of(context).pop(true);
                                 },
                                 child: new ListTile(

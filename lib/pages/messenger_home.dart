@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './chat.dart';
-import 'chat_controller.dart';
+import 'package:ipptbuddy/controllers/chat_controller.dart';
 
 
 ///UI theme for iOS

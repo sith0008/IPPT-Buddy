@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './auth.dart';
-import './pages/login_page.dart';
-import './pages/home.dart';
+import 'package:ipptbuddy/pages/login_page.dart';
+import 'package:ipptbuddy/pages/home.dart';
 
 
 class RootPage extends StatefulWidget {

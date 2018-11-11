@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ipptbuddy/controllers/auth.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.auth, this.onSignIn}) : super(key: key);

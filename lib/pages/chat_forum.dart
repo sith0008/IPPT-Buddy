@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'chat_controller.dart';
+import 'package:ipptbuddy/controllers/chat_controller.dart';
 
 ///iOS theme
 final ThemeData iOSTheme = new ThemeData(

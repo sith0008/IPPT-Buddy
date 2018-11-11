@@ -659,12 +659,7 @@ class _MatchMeState extends State<MatchMe> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-          appBar: new AppBar(
-            title: new Text('Map View Example'),
-          ),
-          body: new Column(
+    return new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               new Container(
@@ -731,7 +726,6 @@ class _MatchMeState extends State<MatchMe> {
                     ],)
               ),
             ],
-          )),
     );
   }
   String location;

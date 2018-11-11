@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
-import './profiles_controller.dart';
+import 'package:ipptbuddy/controllers/profiles_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Profiles extends StatefulWidget {
   @override

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
-import './schedule_controller.dart';
+import 'package:ipptbuddy/controllers/schedule_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// UI widget class to display training schedule for user to follow, also act as a to-do list
 class Schedule extends StatefulWidget {
   const Schedule({Key key, this.title}) : super(key: key);
   final String title;
@@ -13,16 +14,25 @@ class Schedule extends StatefulWidget {
   }
 }
 
+// Widget to display training schedule and to-do list
 class ScheduleState extends State<Schedule> {
-  ScheduleController scheduleController = new ScheduleController();
-  SharedPreferences prefs;
+  // Variables required
   String id;
+
+  // Classes used
+  SharedPreferences prefs;
+
+  // Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
+  /// Widget to build each schedule
+  /// Display exercise name on the left
+  /// Display number of repitions below exercise name
+  /// Display checked box on the right
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
     return new Container(
       child: new Container(
@@ -37,13 +47,14 @@ class ScheduleState extends State<Schedule> {
                 value: document['checked'],
                 onChanged: (bool value) {
                   setState(() {
-                    scheduleController.scheduleRef(value, document['name'], id);
+                    ScheduleController.scheduleRef(value, document['name'], id);
                   });
                 })),
       ),
     );
   }
 
+  // Build container widget to hold the contents of schedules list
   @override
   Widget build(BuildContext context) {
     readLocal();
@@ -54,33 +65,35 @@ class ScheduleState extends State<Schedule> {
             children: <Widget>[
               new Expanded(
                   child: new Container(
-                        color: new Color(0xFFED2939),
-                        child: new Container(
-                          alignment: FractionalOffset(0.1, 0.5),
-                            child: new Text("Window Closes: 20 Dec 2018",
-                                style: new TextStyle(
-                                  color: Colors.white,
-                                    fontFamily: 'Raleway',
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold
-                                    ))),
-                      ),
+                    color: new Color(0xFFED2939),
+                    child: new Container(
+                        alignment: FractionalOffset(0.1, 0.5),
+                        child: new Text("Window Closes: 20 Dec 2018",
+                            style: new TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Raleway',
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold))),
+                  ),
                   flex: 1),
               new Expanded(
                   child: new Container(
                       child: new Card(
-                        color: Colors.white,
-                        child: new Center(
-                            child: new Text(formatDate(new DateTime.now(), [dd, ' ', M, ' ', yyyy]).toString(),
-                                style: new TextStyle(
-                                    fontFamily: 'Raleway',
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold))),
-                      )),
+                    color: Colors.white,
+                    child: new Center(
+                        child: new Text(
+                            formatDate(
+                                    new DateTime.now(), [dd, ' ', M, ' ', yyyy])
+                                .toString(),
+                            style: new TextStyle(
+                                fontFamily: 'Raleway',
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold))),
+                  )),
                   flex: 2),
               new Expanded(
                   child: new StreamBuilder(
-                      stream: scheduleController.scheduleSnapshots(id),
+                      stream: ScheduleController.scheduleSnapshots(id),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return const Text('Loading...');
                         return new ListView.builder(

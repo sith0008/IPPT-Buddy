@@ -10,10 +10,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './const.dart';
-import 'chat_controller.dart';
+import 'const.dart';
+import 'package:ipptbuddy/controllers/chat_controller.dart';
 
-///UI widget class to display specfic chats between user and peer
+/// UI widget class to display specfic chats between user and peer
 class Chat extends StatelessWidget {
   final String peerId;
   final String peerName;
@@ -21,13 +21,18 @@ class Chat extends StatelessWidget {
   Chat({Key key, @required this.peerId, @required this.peerName})
       : super(key: key);
 
-  ///Build external Scaffold to hold messages
+  /// Build external Scaffold to hold messages
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(peerName),
-        backgroundColor: new Color(0xFF1D4886),
+        backgroundColor: Colors.white,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: new Color(0xFFED2939),
+              displayColor: new Color(0xFFED2939),
+              fontFamily: 'Garamond',
+            ),
         elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 6.0,
       ),
       body: new ChatScreen(
@@ -37,7 +42,7 @@ class Chat extends StatelessWidget {
   }
 }
 
-///Widget to display list of messages
+/// Widget to display list of messages
 class ChatScreen extends StatefulWidget {
   final String peerId;
 
@@ -51,7 +56,7 @@ class ChatScreen extends StatefulWidget {
 class ChatScreenState extends State<ChatScreen> {
   ChatScreenState({Key key, @required this.peerId});
 
-  //Variables required
+  // Variables required
   String peerId;
 
   var listMessage;
@@ -62,7 +67,7 @@ class ChatScreenState extends State<ChatScreen> {
   bool isShowSticker;
   String imageUrl;
 
-  //Classes used
+  // Classes used
   SharedPreferences prefs;
 
   //Channel to communicate with java native
@@ -90,7 +95,6 @@ class ChatScreenState extends State<ChatScreen> {
   ///Hide sticker when keyboard appear
   void onFocusChange() {
     if (focusNode.hasFocus) {
-
       setState(() {
         isShowSticker = false;
       });
@@ -113,7 +117,6 @@ class ChatScreenState extends State<ChatScreen> {
       isShowSticker = !isShowSticker;
     });
   }
-
 
   ///Get image from user's gallery
   Future getImage() async {
@@ -148,19 +151,20 @@ class ChatScreenState extends State<ChatScreen> {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
-      var documentReference = ChatController.createChatMessageFirebase(groupChatId);
-      ChatController.addMessageDetails(documentReference, id, peerId, content, type);
+      var documentReference =
+          ChatController.createChatMessageFirebase(groupChatId);
+      ChatController.addMessageDetails(
+          documentReference, id, peerId, content, type);
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     }
     if (peerId == 'ipptbuddychatbot@ippt.com') {
       //Send message to watson server
       _sendMessageToWatson(content);
-    }else {
+    } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
   }
-
 
   ///Send message to Watson Assistant
   ///Currently there isn't dart packages that calls to Watson Assistant
@@ -169,13 +173,14 @@ class ChatScreenState extends State<ChatScreen> {
     try {
       final String chatbotMessage = await platform
           .invokeMethod('getChatbotMessage', {'content': content});
-      var documentReference = ChatController.createChatMessageFirebase(groupChatId);
-      ChatController.addMessageDetails(documentReference, 'ipptbuddychatbot@ippt.com', id, chatbotMessage, 0);
+      var documentReference =
+          ChatController.createChatMessageFirebase(groupChatId);
+      ChatController.addMessageDetails(documentReference,
+          'ipptbuddychatbot@ippt.com', id, chatbotMessage, 0);
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } catch (e) {}
   }
-
 
   ///Widget to build each message/sticker
   ///Display messages from user on right
@@ -199,7 +204,10 @@ class ChatScreenState extends State<ChatScreen> {
                       color: greyColor2,
                       borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(
-                      bottom: ChatController.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
+                      bottom: ChatController.isLastMessageRight(
+                              index, listMessage, id)
+                          ? 20.0
+                          : 10.0,
                       right: 10.0),
                 )
               : document['type'] == 1
@@ -241,7 +249,10 @@ class ChatScreenState extends State<ChatScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       ),
                       margin: EdgeInsets.only(
-                          bottom: ChatController.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
+                          bottom: ChatController.isLastMessageRight(
+                                  index, listMessage, id)
+                              ? 20.0
+                              : 10.0,
                           right: 10.0),
                     )
                   // Sticker
@@ -253,7 +264,10 @@ class ChatScreenState extends State<ChatScreen> {
                         fit: BoxFit.cover,
                       ),
                       margin: EdgeInsets.only(
-                          bottom: ChatController.isLastMessageRight(index, listMessage, id) ? 20.0 : 10.0,
+                          bottom: ChatController.isLastMessageRight(
+                                  index, listMessage, id)
+                              ? 20.0
+                              : 10.0,
                           right: 10.0),
                     ),
         ],
@@ -266,7 +280,7 @@ class ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                  ChatController.isLastMessageLeft(index, listMessage, id)
+                ChatController.isLastMessageLeft(index, listMessage, id)
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: Container(
@@ -351,7 +365,10 @@ class ChatScreenState extends State<ChatScreen> {
                               fit: BoxFit.cover,
                             ),
                             margin: EdgeInsets.only(
-                                bottom: ChatController.isLastMessageRight(index, listMessage,id) ? 20.0 : 10.0,
+                                bottom: ChatController.isLastMessageRight(
+                                        index, listMessage, id)
+                                    ? 20.0
+                                    : 10.0,
                                 right: 10.0),
                           ),
               ],
@@ -396,7 +413,6 @@ class ChatScreenState extends State<ChatScreen> {
   ///Build specific chat widget
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       child: Stack(
         children: <Widget>[
@@ -418,7 +434,6 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-
   ///Get sticker from assets and displays them in keyboard sticker tab
   Widget buildSticker() {
     return Container(
@@ -427,52 +442,51 @@ class ChatScreenState extends State<ChatScreen> {
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi1', 2),
-                child: ChatController.getImageAsset('assets/mimi1.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi1', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi1.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi2', 2),
-                child: ChatController.getImageAsset('assets/mimi2.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi2', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi2.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi3', 2),
-                child:
-                  ChatController.getImageAsset('assets/mimi3.gif', 50.0, 50.0)
-              )
+                  onPressed: () => onSendMessage('mimi3', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi3.gif', 50.0, 50.0))
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi4', 2),
-                child: ChatController.getImageAsset('assets/mimi4.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi4', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi4.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi5', 2),
-                child: ChatController.getImageAsset('assets/mimi5.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi5', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi5.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi6', 2),
-                child: ChatController.getImageAsset('assets/mimi6.gif', 50.0, 50.0)
-              )
+                  onPressed: () => onSendMessage('mimi6', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi6.gif', 50.0, 50.0))
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi7', 2),
-                child: ChatController.getImageAsset('assets/mimi7.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi7', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi7.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi8', 2),
-                child: ChatController.getImageAsset('assets/mimi8.gif', 50.0, 50.0)
-              ),
+                  onPressed: () => onSendMessage('mimi8', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi8.gif', 50.0, 50.0)),
               FlatButton(
-                onPressed: () => onSendMessage('mimi9', 2),
-                child: ChatController.getImageAsset('assets/mimi9.gif', 50.0, 50.0)
-              )
+                  onPressed: () => onSendMessage('mimi9', 2),
+                  child: ChatController.getImageAsset(
+                      'assets/mimi9.gif', 50.0, 50.0))
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           )
