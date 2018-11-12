@@ -130,9 +130,8 @@ class ChatGroupScreen extends State<ChatGroup> with TickerProviderStateMixin {
 
   ///Send message onto group
   void _submitMsg(String txt) {
-    List<DocumentSnapshot> databaseDocuments = ChatController.getAllUsers(id);
-    String userName = databaseDocuments[0]['Name'];
-    String photoURL = databaseDocuments[0]['imageURL'];
+    String userName = ChatController.getName(id);
+    String photoURL = ChatController.getImage(id);
     _textController.clear();
     setState(() {
       _isWriting = false;

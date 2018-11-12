@@ -35,23 +35,31 @@ class ScheduleState extends State<Schedule> {
   /// Display checked box on the right
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
     return new Container(
-      child: new Container(
-        child: new Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
-            child: new CheckboxListTile(
-                title: new Text(document['name']),
-                subtitle: new Text(document['rep'].toString()),
-                value: document['checked'],
-                onChanged: (bool value) {
-                  setState(() {
-                    ScheduleController.scheduleRef(value, document['name'], id);
-                  });
-                })),
-      ),
-    );
+        child: document != null
+            ? new Container(
+                child: new Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
+                    child: new CheckboxListTile(
+                        title: new Text(document['name']),
+                        subtitle: new Text(document['rep'].toString()),
+                        value: document['checked'],
+                        onChanged: (bool value) {
+                          setState(() {
+                            ScheduleController.scheduleRef(
+                                value, document['name'], id);
+                          });
+                        })),
+              )
+            : new Container(
+                child: new Center(
+                    child: new Text(
+                        'Please press the profile button on the AppBar to fill up your profile!',
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20.0))),
+              ));
   }
 
   // Build container widget to hold the contents of schedules list
@@ -66,16 +74,24 @@ class ScheduleState extends State<Schedule> {
             children: <Widget>[
               new Expanded(
                   child: new Container(
-                    color: new Color(0xFFED2939),
-                    child: new Container(
-                        alignment: FractionalOffset(0.1, 0.5),
-                        child: new Text("Window Closes: " + date,
-                            style: new TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Raleway',
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold))),
-                  ),
+                      color: new Color(0xFFED2939),
+                      child: new Container(
+                          alignment: FractionalOffset(0.1, 0.5),
+                          child: date != null
+                              ? new Text("Window Closes: " + date,
+                                  style: new TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway',
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold))
+                              : new Container(
+                                  child: new Center(
+                                      child: new Text(
+                                          'Please press the profile button on the AppBar to fill up your profile!',
+                                          style: new TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0))),
+                                ))),
                   flex: 1),
               new Expanded(
                   child: new Container(

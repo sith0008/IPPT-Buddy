@@ -53,9 +53,22 @@ class _MatchUsersState extends State<MatchUsers> {
         });
   }
 
+  SharedPreferences prefs;
+
+  // Variables required
+  String id;
+
+  //Get user's id from sharedPreference
+  readLocal() async {
+    prefs = await SharedPreferences.getInstance();
+    id = prefs.getString("id").toString() ?? '';
+    setState(() {});
+  }
+
   // Build an external Scaffold to hold the contents of list of users
   @override
   Widget build(BuildContext context) {
+    MatchController.updateProfile(id, location, date);
     return new Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -188,12 +201,14 @@ class ShowInfoState extends State<ShowInfo> {
                                 20.0, 15.0, 20.0, 0.0),
                             child: new GestureDetector(
                                 onTap: () {
+                                  Navigator.of(context).pop(true);
                                   _confirm();
+                                  MatchController.updateProfile(
+                                      id, location, date);
                                   String chatId =
                                       stream.data.documents[i]['id'];
                                   MatchController.addUserToChat(
                                       id, chatId, stream.data.documents[i]);
-                                  Navigator.of(context).pop(true);
                                 },
                                 child: new ListTile(
                                   leading: CircleAvatar(
@@ -212,7 +227,8 @@ class ShowInfoState extends State<ShowInfo> {
                                             ),
                                             overflow: TextOverflow.clip),
                                   ),
-                                  subtitle: Text('2.4km timing: ' + stream.data.documents[i]['matchRun']),
+                                  subtitle: Text('2.4km timing: ' +
+                                      stream.data.documents[i]['matchRun']),
                                 )));
                       })
                   : new Container();

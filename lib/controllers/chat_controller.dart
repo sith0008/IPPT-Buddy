@@ -127,14 +127,24 @@ class ChatController{
         .snapshots();
   }
 
+  static List<DocumentSnapshot> databaseDocuments;
   ///Get all users
-  static getAllUsers(String id) async{
+  static readAllUsers(String id) async{
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('id', isEqualTo: id)
         .getDocuments();
-    List<DocumentSnapshot> databaseDocuments = result.documents;
-    return databaseDocuments;
+    databaseDocuments = result.documents;
+  }
+
+  static String getName(String id) {
+    readAllUsers(id);
+    return databaseDocuments[0]['name'];
+  }
+
+  static String getImage(String id) {
+    readAllUsers(id);
+    return databaseDocuments[0]['imageURL'];
   }
 
   ///Get image asset
