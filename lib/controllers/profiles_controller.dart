@@ -51,6 +51,7 @@ class ProfilesController {
     int sec;
     int min;
     if (int.parse(_sec) > 10) {
+      min = int.parse(_min);
       sec = int.parse(_sec) - 10;
     } else {
       min = int.parse(_min) - 1;

@@ -68,9 +68,15 @@ class _MatchUsersState extends State<MatchUsers> {
   // Build an external Scaffold to hold the contents of list of users
   @override
   Widget build(BuildContext context) {
-    MatchController.updateProfile(id, location, date);
+    readLocal();
     return new Scaffold(
         appBar: AppBar(
+          leading: new IconButton(
+              icon: new Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context, true);
+                MatchController.updateProfile(id, location, date);
+              }),
           iconTheme: IconThemeData(
             color: new Color(0xFFED2939),
           ),
@@ -122,6 +128,7 @@ class _MatchUsersState extends State<MatchUsers> {
   }
 }
 
+
 // UI widget class to display list of users to match
 class ShowInfo extends StatefulWidget {
   final BuildContext context;
@@ -140,7 +147,8 @@ class ShowInfoState extends State<ShowInfo> {
 
   // Classes used
   BuildContext context;
-  SharedPreferences prefs;
+
+    SharedPreferences prefs;
 
   // Variables required
   String id;

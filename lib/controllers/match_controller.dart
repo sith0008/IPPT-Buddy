@@ -102,9 +102,7 @@ class MatchController {
   static void updateProfile(String id, String location, String date) {
     DocumentReference documentReference = Firestore.instance
         .collection('users')
-        .document(id)
-        .collection('chatUsers')
-        .document(location);
+        .document(id);
     Map<String, String> groupData2 = <String, String>{
       "location": location,
       "matchDate": date
