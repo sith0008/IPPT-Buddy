@@ -54,6 +54,7 @@ class HomeController {
     DocumentReference dateRef = Firestore.instance.document("users/" + id);
     Map<String, dynamic> dateData = <String, dynamic>{
       "date": "Please fill up your profile!",
+      "id": id
     };
     dateRef.setData(dateData, merge: true).whenComplete(() {
       print("schedule updated");

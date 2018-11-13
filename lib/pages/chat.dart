@@ -277,6 +277,7 @@ class ChatScreenState extends State<ChatScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
       );
     } else {
+      String displayImage = ChatController.imageRef(id, peerId);
       // Left (peer message)
       return Container(
         child: Column(
@@ -297,7 +298,7 @@ class ChatScreenState extends State<ChatScreen> {
                             padding: EdgeInsets.all(10.0),
                           ),
                           imageUrl:
-                              "https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png",
+                              displayImage,
                           width: 35.0,
                           height: 35.0,
                           fit: BoxFit.cover,

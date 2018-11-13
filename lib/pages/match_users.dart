@@ -128,7 +128,6 @@ class _MatchUsersState extends State<MatchUsers> {
   }
 }
 
-
 // UI widget class to display list of users to match
 class ShowInfo extends StatefulWidget {
   final BuildContext context;
@@ -148,7 +147,7 @@ class ShowInfoState extends State<ShowInfo> {
   // Classes used
   BuildContext context;
 
-    SharedPreferences prefs;
+  SharedPreferences prefs;
 
   // Variables required
   String id;
@@ -190,7 +189,7 @@ class ShowInfoState extends State<ShowInfo> {
   @override
   Widget build(BuildContext context) {
     readLocal();
-
+    //
     return Container(
         child: new StreamBuilder<QuerySnapshot>(
             stream: MatchController.userSnapshots(id, location, date),
@@ -221,7 +220,8 @@ class ShowInfoState extends State<ShowInfo> {
                                 child: new ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: new NetworkImage(
-                                        stream.data.documents[i]['imageURL']),
+                                        stream.data.documents[i]['imageURL']
+                                        ),
                                     radius: 28.0,
                                   ),
                                   title: Container(

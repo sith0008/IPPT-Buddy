@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///Controller class which holds all functions to chat UI and messenger_home UI
-class ChatController{
-
+class ChatController {
   /// Returns group chat id of the user and the peer
-  static String getGroupChatID(String id, String peerId){
+  static String getGroupChatID(String id, String peerId) {
     String groupChatId;
 
     //Returns null if id OR peerId is null
-    if(id == null || peerId == null){
+    if (id == null || peerId == null) {
       return null;
     }
 
@@ -24,7 +23,7 @@ class ChatController{
   }
 
   ///Generate new chat message in firebase
-  static DocumentReference createChatMessageFirebase(String groupChatId){
+  static DocumentReference createChatMessageFirebase(String groupChatId) {
     return Firestore.instance
         .collection('chatMessages')
         .document(groupChatId)
@@ -32,8 +31,25 @@ class ChatController{
         .document(DateTime.now().millisecondsSinceEpoch.toString());
   }
 
+  static List<DocumentSnapshot> chatUsersDocuments;
+  static void readImage(String id, String peerId) async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('users')
+        .document(id)
+        .collection('chatUsers')
+        .where('id', isEqualTo: peerId)
+        .getDocuments();
+    chatUsersDocuments = result.documents;
+  }
+
+  static String imageRef(String id, String peerId) {
+    readImage(id, peerId);
+    return chatUsersDocuments[0]['imageURL'];
+  }
+
   ///Generate new group chat message in firebase
-  static void createGroupChatMessageFirebase(String txt, String groupName, String userName, String photoURL){
+  static void createGroupChatMessageFirebase(
+      String txt, String groupName, String userName, String photoURL) {
     DocumentReference documentReference = Firestore.instance
         .collection('groupChats')
         .document(groupName)
@@ -52,17 +68,15 @@ class ChatController{
   }
 
   ///Upload all details of message to chat message
-  static void addMessageDetails(DocumentReference documentReference, String id, String peerId, String content, int type) {
+  static void addMessageDetails(DocumentReference documentReference, String id,
+      String peerId, String content, int type) {
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
         documentReference,
         {
           'idFrom': id,
           'idTo': peerId,
-          'timestamp': DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           'content': content,
           'type': type
         },
@@ -74,8 +88,8 @@ class ChatController{
   ///Returns boolean true/false
   static bool isLastMessageLeft(int index, var listMessage, String id) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] == id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] == id) ||
         index == 0) {
       return true;
     } else {
@@ -86,8 +100,8 @@ class ChatController{
   ///Checks if last message is sent by user
   static bool isLastMessageRight(int index, var listMessage, String id) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] != id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] != id) ||
         index == 0) {
       return true;
     } else {
@@ -96,7 +110,7 @@ class ChatController{
   }
 
   ///Get the latest 20 messages from firestore
-  static Stream<QuerySnapshot> getChatMessageSnapshot(groupChatId){
+  static Stream<QuerySnapshot> getChatMessageSnapshot(groupChatId) {
     return Firestore.instance
         .collection('chatMessages')
         .document(groupChatId)
@@ -108,7 +122,7 @@ class ChatController{
 
   ///Get list of chatusers user is linked to
   ///Shows chat user which the users added in matchMe
-  static Stream<QuerySnapshot> getChatuserList(String id){
+  static Stream<QuerySnapshot> getChatuserList(String id) {
     return Firestore.instance
         .collection('users')
         .document(id)
@@ -117,7 +131,7 @@ class ChatController{
   }
 
   ///Get group chat messages from firestore
-  static Stream<QuerySnapshot> getGroupChatMessages(String groupName){
+  static Stream<QuerySnapshot> getGroupChatMessages(String groupName) {
     return Firestore.instance
         .collection('groupChats')
         .document(groupName)
@@ -128,8 +142,9 @@ class ChatController{
   }
 
   static List<DocumentSnapshot> databaseDocuments;
+
   ///Get all users
-  static readAllUsers(String id) async{
+  static readAllUsers(String id) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('id', isEqualTo: id)
@@ -148,7 +163,7 @@ class ChatController{
   }
 
   ///Get image asset
-  static getImageAsset(String imageAsset, double width, double height){
+  static getImageAsset(String imageAsset, double width, double height) {
     return new Image.asset(
       imageAsset,
       width: width,
@@ -157,5 +172,3 @@ class ChatController{
     );
   }
 }
-
-
