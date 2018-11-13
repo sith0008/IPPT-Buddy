@@ -50,7 +50,7 @@ class ProfilesController {
     int sUrep = int.parse(sitUp) + 5;
     int sec;
     int min;
-    if (int.parse(_sec) > 10) {
+    if (int.parse(_sec) >= 10) {
       min = int.parse(_min);
       sec = int.parse(_sec) - 10;
     } else {

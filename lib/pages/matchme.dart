@@ -580,11 +580,13 @@ class _MatchMeState extends State<MatchMe> {
                   child: new Container(
                 child: new Text(
                   "You are supposed to see a map here.\n\nAPI Key is not valid.\n\n"
-                      "To view maps in the example application set the "
-                      "API_KEY variable in example/lib/main.dart. "
-                      "\n\nIf you have set an API Key but you still see this text "
-                      "make sure you have enabled all of the correct APIs "
-                      "in the Google API Console. See README for more detail.",
+                  "Map loading or Google Map API not available."
+                      // "To view maps in the example application set the "
+                      // "API_KEY variable in example/lib/main.dart. "
+                      // "\n\nIf you have set an API Key but you still see this text "
+                      // "make sure you have enabled all of the correct APIs "
+                      // "in the Google API Console. See README for more detail."
+                      ,
                   textAlign: TextAlign.center,
                 ),
                 padding: const EdgeInsets.all(20.0),

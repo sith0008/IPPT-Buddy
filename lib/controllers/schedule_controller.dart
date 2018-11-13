@@ -21,7 +21,13 @@ class ScheduleController {
 
   static String dateRef(String id) {
     readData(id);
-    return databaseDocuments[0]['date'];
+    String inCase =
+        "Please press the profile button on the AppBar to fill up your profile!";
+    if (databaseDocuments != null) {
+      return databaseDocuments[0]['date'];
+    } else {
+      return inCase;
+    }
   }
 
   static void scheduleRef(bool value, String document, String id) {

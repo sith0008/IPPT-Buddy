@@ -45,7 +45,7 @@ class MatchController {
   static void addUserToChat(
       String id, String chatId, DocumentSnapshot snapshot) {
     readData(id);
-    readUser();
+    readUsers();
     readUser();
     DocumentReference documentReference = Firestore.instance
         .collection('users')
