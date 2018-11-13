@@ -44,7 +44,7 @@ class ChatController {
 
   static String imageRef(String id, String peerId) {
     readImage(id, peerId);
-    return chatUsersDocuments[0]['imageURL'];
+    return chatUsersDocuments[0]['photoURL'];
   }
 
   ///Generate new group chat message in firebase
