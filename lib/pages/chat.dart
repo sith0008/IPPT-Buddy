@@ -277,7 +277,14 @@ class ChatScreenState extends State<ChatScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
       );
     } else {
-      String displayImage = ChatController.imageRef(id, peerId);
+      String image;
+        if (peerId == 'ipptbuddychatbot@ippt.com') {
+          image = 'https://i.ebayimg.com/images/g/4bYAAOSwknJX0Xln/s-l300.jpg';
+        }
+        else {
+          image = 'http://www.desiformal.com/assets/images/default-userAvatar.png';
+        }
+      // String displayImage = ChatController.imageRef(id, peerId);
       // Left (peer message)
       return Container(
         child: Column(
@@ -298,7 +305,9 @@ class ChatScreenState extends State<ChatScreen> {
                             padding: EdgeInsets.all(10.0),
                           ),
                           imageUrl:
-                              displayImage,
+                          image
+                              // displayImage
+                              ,
                           width: 35.0,
                           height: 35.0,
                           fit: BoxFit.cover,

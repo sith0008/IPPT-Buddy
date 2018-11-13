@@ -31,22 +31,22 @@ class ChatController {
         .document(DateTime.now().millisecondsSinceEpoch.toString());
   }
 
-  static List<DocumentSnapshot> chatUsersDocuments;
-  static void readImage(String id, String peerId) async {
-    final QuerySnapshot result = await Firestore.instance
-        .collection('users')
-        .document(id)
-        .collection('chatUsers')
-        .where('id', isEqualTo: peerId)
-        .getDocuments();
-    chatUsersDocuments = result.documents;
-  }
+  // static List<DocumentSnapshot> chatUsersDocuments;
+  // static void readImage(String id, String peerId) async {
+  //   final QuerySnapshot result = await Firestore.instance
+  //       .collection('users')
+  //       .document(id)
+  //       .collection('chatUsers')
+  //       .where('id', isEqualTo: peerId)
+  //       .getDocuments();
+  //   chatUsersDocuments = result.documents;
+  // }
 
-  static String imageRef(String id, String peerId) {
-    readImage(id, peerId);
-    String photo = chatUsersDocuments[0]['photoURL'];
-    return photo;
-  }
+  // static String imageRef(String id, String peerId) {
+  //   readImage(id, peerId);
+  //   String photo = chatUsersDocuments[0]['photoURL'];
+  //   return photo;
+  // }
 
   ///Generate new group chat message in firebase
   static void createGroupChatMessageFirebase(
