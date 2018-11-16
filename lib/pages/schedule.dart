@@ -62,7 +62,8 @@ class ScheduleState extends State<Schedule> {
               ));
   }
 
-  // Build container widget to hold the contents of schedules list
+  /// Build container widget to hold the contents of schedules list
+  /// display 'loading' if firestore has yet to return any ReferenceDocument
   @override
   Widget build(BuildContext context) {
     readLocal();

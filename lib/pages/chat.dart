@@ -278,12 +278,12 @@ class ChatScreenState extends State<ChatScreen> {
       );
     } else {
       String image;
-        if (peerId == 'ipptbuddychatbot@ippt.com') {
-          image = 'https://i.ebayimg.com/images/g/4bYAAOSwknJX0Xln/s-l300.jpg';
-        }
-        else {
-          image = 'http://www.desiformal.com/assets/images/default-userAvatar.png';
-        }
+      if (peerId == 'ipptbuddychatbot@ippt.com') {
+        image = 'https://i.ebayimg.com/images/g/4bYAAOSwknJX0Xln/s-l300.jpg';
+      } else {
+        image =
+            'http://www.desiformal.com/assets/images/default-userAvatar.png';
+      }
       // String displayImage = ChatController.imageRef(id, peerId);
       // Left (peer message)
       return Container(
@@ -304,8 +304,7 @@ class ChatScreenState extends State<ChatScreen> {
                             height: 35.0,
                             padding: EdgeInsets.all(10.0),
                           ),
-                          imageUrl:
-                          image
+                          imageUrl: image
                               // displayImage
                               ,
                           width: 35.0,

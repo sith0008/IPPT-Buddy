@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Controller class which holds all function to home UI
 class HomeController {
+  // Function to update account's chat page with chatbot and default schedule
   static void updateAccount(String id) {
     if (id != null) {
       DocumentReference documentReference = Firestore.instance

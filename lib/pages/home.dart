@@ -121,9 +121,9 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
                 labelColor: new Color(0xFFED2939),
                 unselectedLabelColor: Colors.grey)),
         body: new TabBarView(controller: controller, children: <Widget>[
-          new schedule.Schedule(),
-          new match.MatchMe(),
-          new chat.MessengerHome()
+          new schedule.Schedule(), // schedule page in body of UI
+          new match.MatchMe(), // match page in body of UI
+          new chat.MessengerHome() // chat list page in body of UI
         ]));
   }
 }

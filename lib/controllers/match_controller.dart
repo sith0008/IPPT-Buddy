@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Controller class which holds all the functions to matchme UI and match_users UI
 class MatchController {
+  // Variables required
   static List<DocumentSnapshot> databaseDocuments;
   static List<DocumentSnapshot> usersDocuments;
 
+  /// Returns true if parameters passed are not null, return false otherwise
+  /// To check if all input are filled up
   static bool fieldFilled(String location, String date) {
     if (location != null && date != null) {
       return true;
@@ -12,6 +16,7 @@ class MatchController {
     }
   }
 
+  // Read data from database to get document of user with id = id
   static void readData(String id) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
@@ -20,19 +25,14 @@ class MatchController {
     databaseDocuments = result.documents;
   }
 
+  // Read data from database to get document of users
   static void readUsers() async {
     final QuerySnapshot result =
         await Firestore.instance.collection('users').getDocuments();
     usersDocuments = result.documents;
   }
 
-  static List<DocumentSnapshot> userDocuments;
-  static void readUser() async {
-    final QuerySnapshot result =
-        await Firestore.instance.collection('users').getDocuments();
-    userDocuments = result.documents;
-  }
-
+  // Generate match users with the same location and date
   static Stream<QuerySnapshot> userSnapshots(
       String id, String location, String date) {
     return Firestore.instance
@@ -42,11 +42,11 @@ class MatchController {
         .snapshots();
   }
 
+  // Add users to chatlist of both users - User that match and matched user
   static void addUserToChat(
       String id, String chatId, DocumentSnapshot snapshot) {
     readData(id);
     readUsers();
-    readUser();
     DocumentReference documentReference = Firestore.instance
         .collection('users')
         .document(id)
@@ -80,6 +80,7 @@ class MatchController {
     }).catchError((e) => print("Errorrrrrrrrrrrr" + e));
   }
 
+  // Add group chat into chatlist
   static void addGroupChat(String id, String location) {
     DocumentReference documentReference = Firestore.instance
         .collection('users')
@@ -99,10 +100,10 @@ class MatchController {
     }).catchError((e) => print(e));
   }
 
+  // update profile with location and date
   static void updateProfile(String id, String location, String date) {
-    DocumentReference documentReference = Firestore.instance
-        .collection('users')
-        .document(id);
+    DocumentReference documentReference =
+        Firestore.instance.collection('users').document(id);
     Map<String, String> groupData2 = <String, String>{
       "location": location,
       "matchDate": date

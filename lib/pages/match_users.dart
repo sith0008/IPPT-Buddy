@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ipptbuddy/controllers/match_controller.dart';
 
-// UI widget to display page with scaffold and appbar
+/// UI widget to display page with scaffold and appbar
+/// Takes in parameter of location and date
 class MatchUsers extends StatefulWidget {
   final String location;
   final String date;
@@ -18,12 +19,19 @@ class MatchUsers extends StatefulWidget {
   }
 }
 
-// Widget to display scaffold and appbar
+/// Widget to display scaffold and appbar
+/// Takes in parameter of location and date
 class _MatchUsersState extends State<MatchUsers> {
   final String location;
   final String date;
   @override
   _MatchUsersState({Key key, @required this.location, @required this.date});
+
+  // Classes used
+  SharedPreferences prefs;
+
+  // Variables required
+  String id;
 
   // Function to call info dialog
   void _info() {
@@ -52,11 +60,6 @@ class _MatchUsersState extends State<MatchUsers> {
           );
         });
   }
-
-  SharedPreferences prefs;
-
-  // Variables required
-  String id;
 
   //Get user's id from sharedPreference
   readLocal() async {
@@ -128,7 +131,8 @@ class _MatchUsersState extends State<MatchUsers> {
   }
 }
 
-// UI widget class to display list of users to match
+/// UI widget class to display list of users to match
+/// Takes in parameter of context, location and date
 class ShowInfo extends StatefulWidget {
   final BuildContext context;
   final String location;
@@ -138,7 +142,8 @@ class ShowInfo extends StatefulWidget {
   ShowInfoState createState() => ShowInfoState(context, location, date);
 }
 
-// Widget to display lists of users
+/// Widget to display lists of users
+/// Takes in parameter of context, location and date
 class ShowInfoState extends State<ShowInfo> {
   final String location;
   final String date;
@@ -146,7 +151,6 @@ class ShowInfoState extends State<ShowInfo> {
 
   // Classes used
   BuildContext context;
-
   SharedPreferences prefs;
 
   // Variables required
@@ -185,11 +189,10 @@ class ShowInfoState extends State<ShowInfo> {
         });
   }
 
-  // Widget to build list of users
+  // Widget to build list of users, display 'loading' if firestore has yet to return any ReferenceDocument
   @override
   Widget build(BuildContext context) {
     readLocal();
-    //
     return Container(
         child: new StreamBuilder<QuerySnapshot>(
             stream: MatchController.userSnapshots(id, location, date),
@@ -220,8 +223,7 @@ class ShowInfoState extends State<ShowInfo> {
                                 child: new ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: new NetworkImage(
-                                        stream.data.documents[i]['imageURL']
-                                        ),
+                                        stream.data.documents[i]['imageURL']),
                                     radius: 28.0,
                                   ),
                                   title: Container(

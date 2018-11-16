@@ -6,40 +6,44 @@ import 'package:ipptbuddy/controllers/profiles_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//UI Widget to display profile settings
 class Profiles extends StatefulWidget {
   @override
   _ProfilesState createState() => _ProfilesState();
 }
 
+// Widget to display input box for profile settings
 class _ProfilesState extends State<Profiles> {
+  // Classes used
   SharedPreferences prefs;
+
+  // Variables required
   String id;
+  var _image;
+  var image;
+  String _min;
+  String _sec;
+  String _nickName;
+  String _pushUp;
+  String _sitUp;
+  List<String> _awards = new List<String>();
+  String _award;
+  String _time;
+  String _dateValue = '';
+
+  // Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
-  var _image;
-  var image;
-
-  String _min;
-  String _sec;
-
-  String _nickName;
-  String _pushUp;
-  String _sitUp;
-
-  List<String> _awards = new List<String>();
-  String _award;
-
-  String _time;
-
   @override
   void initState() {
     _awards.addAll(["Gold", "Silver", "Pass"]);
   }
 
+  // Call camera application
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
@@ -48,19 +52,22 @@ class _ProfilesState extends State<Profiles> {
     });
   }
 
+  // Change value of award
   void _onChangedAward(String value) {
     setState(() {
       _award = value;
     });
   }
 
+  // Get image for storing
   void _getImage() {
     setState(() {
       _image = image;
     });
   }
 
-  String _dateValue = '';
+  ///Let user select date using date picker pop up.
+  ///Function runs the date picker popup
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
         context: context,
@@ -72,10 +79,12 @@ class _ProfilesState extends State<Profiles> {
           _dateValue = formatDate(picked, [dd, ' ', M, ' ', yyyy]).toString());
   }
 
+  // Function to call confirm dialog
   void _confirm() {
     confirmDialog(context).then((bool value) {});
   }
 
+  // confirm dialog to notify user that profile has been updated
   Future<bool> confirmDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -96,10 +105,12 @@ class _ProfilesState extends State<Profiles> {
         });
   }
 
+  // Function to call null dialog
   void _confirmNull() {
     nullDialog(context).then((bool value) {});
   }
 
+  // null dialog to prompt user to fill up all fields before saving
   Future<bool> nullDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -119,6 +130,8 @@ class _ProfilesState extends State<Profiles> {
         });
   }
 
+  /// Build an external scaffold to hold the contents of profile and settings
+  /// Widget to build the profile and settings form for user to fill
   @override
   Widget build(BuildContext context) {
     readLocal();
@@ -192,6 +205,7 @@ class _ProfilesState extends State<Profiles> {
                         new Expanded(
                           child: new TextField(
                             onChanged: (String m) {
+                              // check if min input is less than 60
                               if (ProfilesController.validSecMin(m)) {
                                 setState(() {
                                   _min = m;
@@ -215,6 +229,7 @@ class _ProfilesState extends State<Profiles> {
                           child: new TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String s) {
+                              // check if sec input is less than 60
                               if (ProfilesController.validSecMin(s)) {
                                 setState(() {
                                   _sec = s;
@@ -343,8 +358,18 @@ class _ProfilesState extends State<Profiles> {
                         if (ProfilesController.fieldFilled(_nickName, _min,
                             _sec, _award, _pushUp, _sitUp, _dateValue)) {
                           _time = ProfilesController.findTiming(_min, _sec);
-                          ProfilesController.updateProfile(_nickName, _time,
-                              _pushUp, _sitUp, _award, _dateValue, id, _min, _sec);
+                          // Call Profiles Controller to update profile infomation on database
+                          ProfilesController.updateProfile(
+                              _nickName,
+                              _time,
+                              _pushUp,
+                              _sitUp,
+                              _award,
+                              _dateValue,
+                              id,
+                              _min,
+                              _sec);
+                          // Call profile controller to update schedule data on database
                           ProfilesController.updateSchedule(
                               _pushUp, _sitUp, _min, _sec, id);
                           Navigator.of(context).pop(true);
