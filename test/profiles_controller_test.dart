@@ -73,28 +73,22 @@ void main(){
     expect(ProfilesController.validSecMin('1'), true);
   });
 
-  String sec = '30';
-  String min = '13';
-  ///Ensure that the timing generated is correct: 60*min + sec
-  test('Should return correct timing according to 60*min + sec', (){
-    expect(ProfilesController.findTiming(min, sec), '810');
-  });
+  String sec = '40';
+  String min = '10';
 
-  ///Throws error when invalid input
-  test('Should throw an error when there are invalid inputs',(){
-    expect(() => ProfilesController.findTiming(min, 'aa'), throwsException);
-  });
-
-  ///Throws error when invalid input
-  test('Should throw an error when there are invalid inputs',(){
-    expect(() => ProfilesController.findTiming('aa', sec), throwsException);
-  });
-
-  ///Throws error when invalid input
+  ///Should return normally if min and sec are valid
   test('Should return normally when there are invalid inputs',(){
     expect(() => ProfilesController.findTiming(min, sec), returnsNormally);
   });
 
+  ///Throws error when invalid input
+  test('Should throw an error when there are invalid inputs',(){
+    expect(() => ProfilesController.findTiming(min, 'aaaa'), throwsException);
+  });
 
+  ///Throws error when invalid input
+  test('Should throw an error when there are invalid inputs',(){
+    expect(() => ProfilesController.findTiming('aaaaa', sec), throwsException);
+  });
 }
 
