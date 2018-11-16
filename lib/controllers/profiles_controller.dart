@@ -18,6 +18,8 @@ class ProfilesController {
   }
 
   static String findTiming(String _min, String _sec) {
+    validSecMin(_sec);
+    validSecMin(_min);
     int min = int.parse(_min) * 60;
     int sec = int.parse(_sec);
     int time = min + sec;
