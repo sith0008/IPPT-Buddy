@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Controller class which holds all the functions to matchme UI and match_users UI
+/// Controller class which holds all the functions to matchme UI and match_users UI
 class MatchController {
   // Variables required
   static List<DocumentSnapshot> databaseDocuments;
@@ -16,7 +16,7 @@ class MatchController {
     }
   }
 
-  // Read data from database to get document of user with id = id
+  /// Read data from database to get document of user with id = id
   static void readData(String id) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
@@ -25,14 +25,14 @@ class MatchController {
     databaseDocuments = result.documents;
   }
 
-  // Read data from database to get document of users
+  /// Read data from database to get document of users
   static void readUsers() async {
     final QuerySnapshot result =
         await Firestore.instance.collection('users').getDocuments();
     usersDocuments = result.documents;
   }
 
-  // Generate match users with the same location and date
+  /// Generate match users with the same location and date
   static Stream<QuerySnapshot> userSnapshots(
       String id, String location, String date) {
     return Firestore.instance
@@ -42,7 +42,7 @@ class MatchController {
         .snapshots();
   }
 
-  // Add users to chatlist of both users - User that match and matched user
+  /// Add users to chatlist of both users - User that match and matched user
   static void addUserToChat(
       String id, String chatId, DocumentSnapshot snapshot) {
     readData(id);
@@ -80,7 +80,7 @@ class MatchController {
     }).catchError((e) => print("Errorrrrrrrrrrrr" + e));
   }
 
-  // Add group chat into chatlist
+  /// Add group chat into chatlist
   static void addGroupChat(String id, String location) {
     DocumentReference documentReference = Firestore.instance
         .collection('users')
@@ -100,7 +100,7 @@ class MatchController {
     }).catchError((e) => print(e));
   }
 
-  // update profile with location and date
+  /// update profile with location and date
   static void updateProfile(String id, String location, String date) {
     DocumentReference documentReference =
         Firestore.instance.collection('users').document(id);

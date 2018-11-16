@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => new _LoginPageState();
 }
 
-// initialise enum for login and register
+/// initialise enum for login and register
 enum FormType { login, register }
 
 ///Widget to display login page with inputs of username and password
@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   FormType _formType = FormType.login;
   String _authHint = '';
 
-  // Function to validate account and save
+  /// Function to validate account and save
   bool validateAndSave() {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 
-  // Function to validate account and submit to authentication backend
+  /// Function to validate account and submit to authentication backend
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Function to change from sign in to register for new account
+  /// Function to change from sign in to register for new account
   void moveToRegister() {
     formKey.currentState.reset();
     setState(() {
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  // Function to change back from register to sign in
+  /// Function to change back from register to sign in
   void moveToLogin() {
     formKey.currentState.reset();
     setState(() {
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  // Widget to build input box for username and password
+  /// Widget to build input box for username and password
   List<Widget> usernameAndPassword() {
     return [
       padded(
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
     ];
   }
 
-  // Widget to build button to login or register
+  /// Widget to build button to login or register
   List<Widget> submitWidgets() {
     switch (_formType) {
       case FormType.login:
@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  // Widget to build hintText in input boxes of username and password
+  /// Widget to build hintText in input boxes of username and password
   Widget hintText() {
     return new Container(
         //height: 80.0,
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// Class to build primary button with specific appearance
+/// Class to build primary button with specific appearance
 class PrimaryButton extends StatelessWidget {
   PrimaryButton({this.key, this.text, this.height, this.onPressed})
       : super(key: key);
@@ -193,7 +193,7 @@ class PrimaryButton extends StatelessWidget {
   double height;
   VoidCallback onPressed;
 
-  // Build button UI
+  /// Build button UI
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(

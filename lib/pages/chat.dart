@@ -61,7 +61,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   // Variables required
   String peerId;
-
   var listMessage;
   String groupChatId;
   String id;

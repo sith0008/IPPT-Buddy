@@ -8,7 +8,7 @@ import 'package:ipptbuddy/controllers/match_controller.dart';
 import 'package:date_format/date_format.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// API Key for google maps
+/// API Key for google maps
 const API_KEY = "AIzaSyCnU0dF2qUj8RyWqRT7kCeMHjfR0ZZkMb0";
 
 /// UI widget class to display map
@@ -18,7 +18,7 @@ class MatchMe extends StatefulWidget {
   State createState() => new _MatchMeState();
 }
 
-// Widget to display map, date picker and type of match options buttons
+/// Widget to display map, date picker and type of match options buttons
 class _MatchMeState extends State<MatchMe> {
   // Classes used
   MapView mapView = new MapView();
@@ -34,7 +34,7 @@ class _MatchMeState extends State<MatchMe> {
   String id;
   String location;
 
-  //Marker bubble
+  /// Marker bubble
   List<Marker> _markers = <Marker>[
     new Marker(
       "1",
@@ -468,7 +468,7 @@ class _MatchMeState extends State<MatchMe> {
     ),
   ];
 
-  //Line
+  /// Line
   List<Polyline> _lines = <Polyline>[
     new Polyline(
         "11",
@@ -490,8 +490,8 @@ class _MatchMeState extends State<MatchMe> {
         width: 900, height: 400, mapType: StaticMapViewType.roadmap);
   }
 
-  ///Let user select date using date picker pop up.
-  ///Function runs the date picker popup
+  /// Let user select date using date picker pop up.
+  /// Function runs the date picker popup
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
         context: context,
@@ -503,19 +503,19 @@ class _MatchMeState extends State<MatchMe> {
           () => date = formatDate(picked, [dd, ' ', M, ' ', yyyy]).toString());
   }
 
-  //Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
     setState(() {});
   }
 
-  // Function to call confirm dialog
+  /// Function to call confirm dialog
   void _confirm() {
     confirmDialog(context).then((bool value) {});
   }
 
-  // confirm dialog to notify user that group chat has been added to chats
+  /// confirm dialog to notify user that group chat has been added to chats
   Future<bool> confirmDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -537,12 +537,12 @@ class _MatchMeState extends State<MatchMe> {
         });
   }
 
-  // Function to call null dialog
+  /// Function to call null dialog
   void _confirmNull() {
     nullDialog(context).then((bool value) {});
   }
 
-  // null dialog to prompt user to fill up location and date fields
+  /// null dialog to prompt user to fill up location and date fields
   Future<bool> nullDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -690,7 +690,7 @@ class _MatchMeState extends State<MatchMe> {
     );
   }
 
-  // Function to show the map in full screen
+  /// Function to show the map in full screen
   showMap() {
     mapView.show(
         new MapOptions(
@@ -760,7 +760,7 @@ class _MatchMeState extends State<MatchMe> {
     compositeSubscription.add(sub);
   }
 
-  // Function to close the map in full screen and go back to page
+  /// Function to close the map in full screen and go back to page
   _handleDismiss() async {
     double zoomLevel = await mapView.zoomLevel;
     Location centerLocation = await mapView.centerLocation;
@@ -780,12 +780,12 @@ class _MatchMeState extends State<MatchMe> {
   }
 }
 
-// Class to manage subscriptions for map
+/// Class to manage subscriptions for map
 class CompositeSubscription {
-  // Classes used
+  /// Classes used
   Set<StreamSubscription> _subscriptions = new Set();
 
-  // Function to cancel subscription
+  /// Function to cancel subscription
   void cancel() {
     for (var n in this._subscriptions) {
       n.cancel();
@@ -793,7 +793,7 @@ class CompositeSubscription {
     this._subscriptions = new Set();
   }
 
-  // Function to add subscription
+  /// Function to add subscription
   void add(StreamSubscription subscription) {
     this._subscriptions.add(subscription);
   }
@@ -803,17 +803,17 @@ class CompositeSubscription {
     _subscriptions.addAll(subs);
   }
 
-  // Function to remove subscription
+  /// Function to remove subscription
   bool remove(StreamSubscription subscription) {
     return this._subscriptions.remove(subscription);
   }
 
-  // Function to check contained subscriptions
+  /// Function to check contained subscriptions
   bool contains(StreamSubscription subscription) {
     return this._subscriptions.contains(subscription);
   }
 
-  // Function to return list of subscriptions
+  /// Function to return list of subscriptions
   List<StreamSubscription> toList() {
     return this._subscriptions.toList();
   }

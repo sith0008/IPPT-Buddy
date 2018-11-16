@@ -4,7 +4,7 @@ import 'package:date_format/date_format.dart';
 import 'package:ipptbuddy/controllers/schedule_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// UI widget class to display training schedule for user to follow, also act as a to-do list
+/// UI widget class to display training schedule for user to follow, also act as a to-do list
 class Schedule extends StatefulWidget {
   const Schedule({Key key, this.title}) : super(key: key);
   final String title;
@@ -14,7 +14,7 @@ class Schedule extends StatefulWidget {
   }
 }
 
-// Widget to display training schedule and to-do list
+/// Widget to display training schedule and to-do list
 class ScheduleState extends State<Schedule> {
   // Variables required
   String id;
@@ -22,7 +22,7 @@ class ScheduleState extends State<Schedule> {
   // Classes used
   SharedPreferences prefs;
 
-  // Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';

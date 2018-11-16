@@ -6,13 +6,13 @@ import 'package:ipptbuddy/controllers/profiles_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//UI Widget to display profile settings
+/// UI Widget to display profile settings
 class Profiles extends StatefulWidget {
   @override
   _ProfilesState createState() => _ProfilesState();
 }
 
-// Widget to display input box for profile settings
+/// Widget to display input box for profile settings
 class _ProfilesState extends State<Profiles> {
   // Classes used
   SharedPreferences prefs;
@@ -31,7 +31,7 @@ class _ProfilesState extends State<Profiles> {
   String _time;
   String _dateValue = '';
 
-  // Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
@@ -43,7 +43,7 @@ class _ProfilesState extends State<Profiles> {
     _awards.addAll(["Gold", "Silver", "Pass"]);
   }
 
-  // Call camera application
+  /// Call camera application
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
@@ -52,14 +52,14 @@ class _ProfilesState extends State<Profiles> {
     });
   }
 
-  // Change value of award
+  /// Change value of award
   void _onChangedAward(String value) {
     setState(() {
       _award = value;
     });
   }
 
-  // Get image for storing
+  /// Get image for storing
   void _getImage() {
     setState(() {
       _image = image;
@@ -79,12 +79,12 @@ class _ProfilesState extends State<Profiles> {
           _dateValue = formatDate(picked, [dd, ' ', M, ' ', yyyy]).toString());
   }
 
-  // Function to call confirm dialog
+  /// Function to call confirm dialog
   void _confirm() {
     confirmDialog(context).then((bool value) {});
   }
 
-  // confirm dialog to notify user that profile has been updated
+  /// confirm dialog to notify user that profile has been updated
   Future<bool> confirmDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -105,12 +105,12 @@ class _ProfilesState extends State<Profiles> {
         });
   }
 
-  // Function to call null dialog
+  /// Function to call null dialog
   void _confirmNull() {
     nullDialog(context).then((bool value) {});
   }
 
-  // null dialog to prompt user to fill up all fields before saving
+  /// null dialog to prompt user to fill up all fields before saving
   Future<bool> nullDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,

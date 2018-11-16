@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Controller class which holds all the functions to schedule UI
+/// Controller class which holds all the functions to schedule UI
 class ScheduleController {
-  // Variables used
+  /// Variables used
   static List<DocumentSnapshot> databaseDocuments;
 
-  // Generate users schedules from database
+  /// Generate users schedules from database
   static Stream<QuerySnapshot> scheduleSnapshots(String id) {
     return Firestore.instance
         .collection('users')
@@ -14,7 +14,7 @@ class ScheduleController {
         .snapshots();
   }
 
-  // Read data from database to get document of user with id = id
+  /// Read data from database to get document of user with id = id
   static void readData(String id) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
@@ -23,7 +23,7 @@ class ScheduleController {
     databaseDocuments = result.documents;
   }
 
-  // Update database with date data
+  /// Update database with date data
   static String dateRef(String id) {
     readData(id);
     String inCase =

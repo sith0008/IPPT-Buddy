@@ -37,7 +37,7 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
-  // Build either login UI page or home UI page
+  /// Build either login UI page or home UI page
   @override
   Widget build(BuildContext context) {
     switch (authStatus) {

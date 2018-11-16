@@ -6,6 +6,7 @@ import 'package:map_view/map_view.dart';
 
 /// API key for google maps.
 const API_KEY = "AIzaSyCnU0dF2qUj8RyWqRT7kCeMHjfR0ZZkMb0";
+
 /// main method ran at start of application
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])

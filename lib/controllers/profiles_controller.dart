@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Controller class which holds all the functions to profiles UI
+/// Controller class which holds all the functions to profiles UI
 class ProfilesController {
   /// Returns true if parameters passed are not null, return false otherwise
   /// To check if all input are filled up
@@ -19,7 +19,7 @@ class ProfilesController {
     }
   }
 
-  // Function to find timing in min and second
+  /// Function to find timing in min and second
   static String findTiming(String _min, String _sec) {
     validSecMin(_sec);
     validSecMin(_min);
@@ -29,7 +29,7 @@ class ProfilesController {
     return time.toString();
   }
 
-  // update database with profile and settings details
+  /// update database with profile and settings details
   static void updateProfile(
       String nickName,
       String time,
@@ -60,7 +60,7 @@ class ProfilesController {
     }).catchError((e) => print(e));
   }
 
-  // update database with schedule based on profile settings
+  /// update database with schedule based on profile settings
   static void updateSchedule(
       String pushUp, String sitUp, String _min, String _sec, String id) {
     int pUrep = int.parse(pushUp) + 5;

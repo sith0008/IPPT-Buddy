@@ -33,12 +33,12 @@ class _MatchUsersState extends State<MatchUsers> {
   // Variables required
   String id;
 
-  // Function to call info dialog
+  /// Function to call info dialog
   void _info() {
     infoDialog(context).then((bool value) {});
   }
 
-  // info dialog to give information on the page and how to use the page
+  /// info dialog to give information on the page and how to use the page
   Future<bool> infoDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -61,14 +61,14 @@ class _MatchUsersState extends State<MatchUsers> {
         });
   }
 
-  //Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
-  // Build an external Scaffold to hold the contents of list of users
+  /// Build an external Scaffold to hold the contents of list of users
   @override
   Widget build(BuildContext context) {
     readLocal();
@@ -156,19 +156,19 @@ class ShowInfoState extends State<ShowInfo> {
   // Variables required
   String id;
 
-  //Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
-  // Function to call confirmation dialog
+  /// Function to call confirmation dialog
   void _confirm() {
     confirmDialog(context).then((bool value) {});
   }
 
-  // Confirmation dialog to inform user that user is added to his chats when he press the 'chat' button
+  /// Confirmation dialog to inform user that user is added to his chats when he press the 'chat' button
   Future<bool> confirmDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
@@ -189,7 +189,7 @@ class ShowInfoState extends State<ShowInfo> {
         });
   }
 
-  // Widget to build list of users, display 'loading' if firestore has yet to return any ReferenceDocument
+  /// Widget to build list of users, display 'loading' if firestore has yet to return any ReferenceDocument
   @override
   Widget build(BuildContext context) {
     readLocal();

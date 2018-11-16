@@ -30,14 +30,14 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
   MyTabs handler;
   TabController controller;
 
-  //Get user's id from sharedPreference
+  /// Get user's id from sharedPreference
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString("id").toString() ?? '';
     setState(() {});
   }
 
-  // List of tabs
+  /// List of tabs
   final List<MyTabs> _tabs = [
     new MyTabs(title: "IPPT Buddy"),
     new MyTabs(title: "MatchMe"),
@@ -64,11 +64,11 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
     });
   }
 
-  // Build external Scaffold to contain AppBar and navigator bar
+  /// Build external Scaffold to contain AppBar and navigator bar
   @override
   Widget build(BuildContext context) {
     readLocal();
-    // Sign out user from the application
+    /// Sign out user from the application
     void _signOut() async {
       try {
         await auth.signOut();
@@ -128,7 +128,7 @@ class MyTabsState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-// Widget to display tab name as title of pages
+/// Widget to display tab name as title of pages
 class MyTabs {
   final String title;
   MyTabs({this.title});
