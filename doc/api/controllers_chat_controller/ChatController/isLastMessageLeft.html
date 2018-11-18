@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the isLastMessageLeft method from the ChatController class, for the Dart programming language.">
+  <title>isLastMessageLeft method - ChatController class - chat_controller library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">ipptbuddy</a></li>
+    <li><a href="controllers_chat_controller/controllers_chat_controller-library.html">chat_controller</a></li>
+    <li><a href="controllers_chat_controller/ChatController-class.html">ChatController</a></li>
+    <li class="self-crumb">isLastMessageLeft method</li>
+  </ol>
+  <div class="self-name">isLastMessageLeft</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>ChatController class</h5>
+    <ol>
+      <li class="section-title"><a href="controllers_chat_controller/ChatController-class.html#constructors">Constructors</a></li>
+      <li><a href="controllers_chat_controller/ChatController/ChatController.html">ChatController</a></li>
+    
+      <li class="section-title inherited">
+        <a href="controllers_chat_controller/ChatController-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="controllers_chat_controller/ChatController/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="controllers_chat_controller/ChatController/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_chat_controller/ChatController-class.html#instance-methods">Methods</a></li>
+      <li class="inherited"><a href="controllers_chat_controller/ChatController/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="controllers_chat_controller/ChatController/toString.html">toString</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_chat_controller/ChatController-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="controllers_chat_controller/ChatController/operator_equals.html">operator ==</a></li>
+    
+      <li class="section-title"><a href="controllers_chat_controller/ChatController-class.html#static-properties">Static properties</a></li>
+      <li><a href="controllers_chat_controller/ChatController/databaseDocuments.html">databaseDocuments</a></li>
+    
+      <li class="section-title"><a href="controllers_chat_controller/ChatController-class.html#static-methods">Static methods</a></li>
+      <li><a href="controllers_chat_controller/ChatController/addMessageDetails.html">addMessageDetails</a></li>
+      <li><a href="controllers_chat_controller/ChatController/createChatMessageFirebase.html">createChatMessageFirebase</a></li>
+      <li><a href="controllers_chat_controller/ChatController/createGroupChatMessageFirebase.html">createGroupChatMessageFirebase</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getChatMessageSnapshot.html">getChatMessageSnapshot</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getChatuserList.html">getChatuserList</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getGroupChatID.html">getGroupChatID</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getGroupChatMessages.html">getGroupChatMessages</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getImage.html">getImage</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getImageAsset.html">getImageAsset</a></li>
+      <li><a href="controllers_chat_controller/ChatController/getName.html">getName</a></li>
+      <li><a href="controllers_chat_controller/ChatController/isLastMessageLeft.html">isLastMessageLeft</a></li>
+      <li><a href="controllers_chat_controller/ChatController/isLastMessageRight.html">isLastMessageRight</a></li>
+      <li><a href="controllers_chat_controller/ChatController/readAllUsers.html">readAllUsers</a></li>
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>isLastMessageLeft method</h1>
+
+    <section class="multi-line-signature">
+      <span class="returntype">bool</span>
+      <span class="name ">isLastMessageLeft</span>
+(<wbr><span class="parameter" id="isLastMessageLeft-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span>, </span> <span class="parameter" id="isLastMessageLeft-param-listMessage"><span class="type-annotation">dynamic</span> <span class="parameter-name">listMessage</span>, </span> <span class="parameter" id="isLastMessageLeft-param-id"><span class="type-annotation">String</span> <span class="parameter-name">id</span></span>)
+      
+    </section>
+    <section class="desc markdown">
+      <p>Check if last message is sent by peer
+Returns boolean true/false</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">static bool isLastMessageLeft(int index, var listMessage, String id) {
+  if ((index &gt; 0 &amp;&amp;
+          listMessage != null &amp;&amp;
+          listMessage[index - 1][&#39;idFrom&#39;] == id) ||
+      index == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ipptbuddy 1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>

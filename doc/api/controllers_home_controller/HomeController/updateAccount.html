@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the updateAccount method from the HomeController class, for the Dart programming language.">
+  <title>updateAccount method - HomeController class - home_controller library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">ipptbuddy</a></li>
+    <li><a href="controllers_home_controller/controllers_home_controller-library.html">home_controller</a></li>
+    <li><a href="controllers_home_controller/HomeController-class.html">HomeController</a></li>
+    <li class="self-crumb">updateAccount method</li>
+  </ol>
+  <div class="self-name">updateAccount</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>HomeController class</h5>
+    <ol>
+      <li class="section-title"><a href="controllers_home_controller/HomeController-class.html#constructors">Constructors</a></li>
+      <li><a href="controllers_home_controller/HomeController/HomeController.html">HomeController</a></li>
+    
+      <li class="section-title inherited">
+        <a href="controllers_home_controller/HomeController-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="controllers_home_controller/HomeController/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="controllers_home_controller/HomeController/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_home_controller/HomeController-class.html#instance-methods">Methods</a></li>
+      <li class="inherited"><a href="controllers_home_controller/HomeController/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="controllers_home_controller/HomeController/toString.html">toString</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_home_controller/HomeController-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="controllers_home_controller/HomeController/operator_equals.html">operator ==</a></li>
+    
+    
+      <li class="section-title"><a href="controllers_home_controller/HomeController-class.html#static-methods">Static methods</a></li>
+      <li><a href="controllers_home_controller/HomeController/updateAccount.html">updateAccount</a></li>
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>updateAccount method</h1>
+
+    <section class="multi-line-signature">
+      <span class="returntype">void</span>
+      <span class="name ">updateAccount</span>
+(<wbr><span class="parameter" id="updateAccount-param-id"><span class="type-annotation">String</span> <span class="parameter-name">id</span></span>)
+      
+    </section>
+    <section class="desc markdown">
+      <p>Function to update account's chat page with chatbot and default schedule</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">static void updateAccount(String id) {
+  if (id != null) {
+    DocumentReference documentReference = Firestore.instance
+        .collection(&#39;users&#39;)
+        .document(id)
+        .collection(&#39;chatUsers&#39;)
+        .document(&#39;1_ChatBot&#39;);
+    Map&lt;String, String&gt; chatData = &lt;String, String&gt;{
+      &quot;aboutMe&quot;: &quot;I am a chatbot!&quot;,
+      &quot;id&quot;: &quot;ipptbuddychatbot@ippt.com&quot;,
+      &quot;photoURL&quot;:
+          &quot;https:&#47;&#47;i.ebayimg.com&#47;images&#47;g&#47;4bYAAOSwknJX0Xln&#47;s-l300.jpg&quot;,
+      &quot;type&quot;: &quot;personal&quot;,
+      &quot;displayName&quot;: &quot;IPPT Buddy Bot&quot;
+    };
+    documentReference.setData(chatData, merge: true).whenComplete(() {
+      print(&quot;chat created&quot;);
+    }).catchError((e) =&gt; print(e));
+
+    DocumentReference pushUpRef = Firestore.instance
+        .document(&quot;users&#47;&quot; + id + &quot;&#47;schedule&#47;&quot; + &quot;Push Ups&quot;);
+    Map&lt;String, dynamic&gt; pushUpData = &lt;String, dynamic&gt;{
+      &quot;checked&quot;: false,
+      &quot;rep&quot;: 0,
+      &quot;name&quot;: &quot;Push Ups&quot;
+    };
+    pushUpRef.setData(pushUpData, merge: true).whenComplete(() {
+      print(&quot;schedule updated&quot;);
+    }).catchError((e) =&gt; print(e));
+    DocumentReference sitUpRef =
+        Firestore.instance.document(&quot;users&#47;&quot; + id + &quot;&#47;schedule&#47;&quot; + &quot;Sit Ups&quot;);
+    Map&lt;String, dynamic&gt; sitUpData = &lt;String, dynamic&gt;{
+      &quot;checked&quot;: false,
+      &quot;rep&quot;: 0,
+      &quot;name&quot;: &quot;Sit Ups&quot;
+    };
+    sitUpRef.setData(sitUpData, merge: true).whenComplete(() {
+      print(&quot;schedule updated&quot;);
+    }).catchError((e) =&gt; print(e));
+    DocumentReference runRef = Firestore.instance
+        .document(&quot;users&#47;&quot; + id + &quot;&#47;schedule&#47;&quot; + &quot;2.4km Run&quot;);
+    Map&lt;String, dynamic&gt; runData = &lt;String, dynamic&gt;{
+      &quot;checked&quot;: false,
+      &quot;rep&quot;: 0,
+      &quot;name&quot;: &quot;2.4km Run&quot;
+    };
+    runRef.setData(runData, merge: true).whenComplete(() {
+      print(&quot;schedule updated&quot;);
+    }).catchError((e) =&gt; print(e));
+  }
+  DocumentReference dateRef = Firestore.instance.document(&quot;users&#47;&quot; + id);
+  Map&lt;String, dynamic&gt; dateData = &lt;String, dynamic&gt;{
+    &quot;date&quot;: &quot;Please fill up your profile!&quot;,
+    &quot;id&quot;: id
+  };
+  dateRef.setData(dateData, merge: true).whenComplete(() {
+    print(&quot;schedule updated&quot;);
+  }).catchError((e) =&gt; print(e));
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ipptbuddy 1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>

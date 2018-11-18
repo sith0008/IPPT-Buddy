@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the addGroupChat method from the MatchController class, for the Dart programming language.">
+  <title>addGroupChat method - MatchController class - match_controller library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">ipptbuddy</a></li>
+    <li><a href="controllers_match_controller/controllers_match_controller-library.html">match_controller</a></li>
+    <li><a href="controllers_match_controller/MatchController-class.html">MatchController</a></li>
+    <li class="self-crumb">addGroupChat method</li>
+  </ol>
+  <div class="self-name">addGroupChat</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>MatchController class</h5>
+    <ol>
+      <li class="section-title"><a href="controllers_match_controller/MatchController-class.html#constructors">Constructors</a></li>
+      <li><a href="controllers_match_controller/MatchController/MatchController.html">MatchController</a></li>
+    
+      <li class="section-title inherited">
+        <a href="controllers_match_controller/MatchController-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="controllers_match_controller/MatchController/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="controllers_match_controller/MatchController/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_match_controller/MatchController-class.html#instance-methods">Methods</a></li>
+      <li class="inherited"><a href="controllers_match_controller/MatchController/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="controllers_match_controller/MatchController/toString.html">toString</a></li>
+    
+      <li class="section-title inherited"><a href="controllers_match_controller/MatchController-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="controllers_match_controller/MatchController/operator_equals.html">operator ==</a></li>
+    
+      <li class="section-title"><a href="controllers_match_controller/MatchController-class.html#static-properties">Static properties</a></li>
+      <li><a href="controllers_match_controller/MatchController/databaseDocuments.html">databaseDocuments</a></li>
+      <li><a href="controllers_match_controller/MatchController/usersDocuments.html">usersDocuments</a></li>
+    
+      <li class="section-title"><a href="controllers_match_controller/MatchController-class.html#static-methods">Static methods</a></li>
+      <li><a href="controllers_match_controller/MatchController/addGroupChat.html">addGroupChat</a></li>
+      <li><a href="controllers_match_controller/MatchController/addUserToChat.html">addUserToChat</a></li>
+      <li><a href="controllers_match_controller/MatchController/fieldFilled.html">fieldFilled</a></li>
+      <li><a href="controllers_match_controller/MatchController/readData.html">readData</a></li>
+      <li><a href="controllers_match_controller/MatchController/readUsers.html">readUsers</a></li>
+      <li><a href="controllers_match_controller/MatchController/updateProfile.html">updateProfile</a></li>
+      <li><a href="controllers_match_controller/MatchController/userSnapshots.html">userSnapshots</a></li>
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>addGroupChat method</h1>
+
+    <section class="multi-line-signature">
+      <span class="returntype">void</span>
+      <span class="name ">addGroupChat</span>
+(<wbr><span class="parameter" id="addGroupChat-param-id"><span class="type-annotation">String</span> <span class="parameter-name">id</span>, </span> <span class="parameter" id="addGroupChat-param-location"><span class="type-annotation">String</span> <span class="parameter-name">location</span></span>)
+      
+    </section>
+    <section class="desc markdown">
+      <p>Add group chat into chatlist</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">static void addGroupChat(String id, String location) {
+  DocumentReference documentReference = Firestore.instance
+      .collection(&#39;users&#39;)
+      .document(id)
+      .collection(&#39;chatUsers&#39;)
+      .document(location);
+  Map&lt;String, String&gt; groupData = &lt;String, String&gt;{
+    &quot;displayName&quot;: location,
+    &quot;id&quot;: location,
+    &quot;photoURL&quot;:
+        &#39;https:&#47;&#47;d30zbujsp7ao6j.cloudfront.net&#47;wp-content&#47;uploads&#47;2017&#47;07&#47;unnamed.png&#39;,
+    &quot;aboutMe&quot;: &quot;Start exercising with a group here!&quot;,
+    &quot;type&quot;: &quot;group&quot;
+  };
+  documentReference.setData(groupData, merge: true).whenComplete(() {
+    print(&quot;group chat created&quot;);
+  }).catchError((e) =&gt; print(e));
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ipptbuddy 1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
